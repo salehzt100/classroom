@@ -1,5 +1,6 @@
-@include('partial.header')
-
+@extends('layouts.master')
+@section('title','Classroom '."$classroom->name")
+@section('content')
 <div class="container">
 
     <h1>{{$classroom->name}} (#{{$classroom->id}})</h1>
@@ -17,4 +18,4 @@
 
 </div>
 
-@include('partial.footer')
+@endsection

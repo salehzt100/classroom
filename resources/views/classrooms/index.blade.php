@@ -1,7 +1,16 @@
-@include('partial.header')
-
+@extends('layouts.master')
+{{--  auto escape ,  jsut insert string not tag--}}
+@section('title','Classrooms')
+@section('content')
 <div class="container">
     <h1 class="mb-5"> Classrooms</h1>
+    @if($success)
+        <div class="alert alert-success">
+            {{$success}}
+        </div>
+
+    @endif
+
     <div class="row">
         @foreach($classrooms as $classroom)
             <div class="col-md-3">
@@ -30,5 +39,8 @@
 
 
 </div>
+@endsection
+@push('scripts')
+    <script>console.log('@@stack')</script>
+@endpush
 
-@include('partial.footer')

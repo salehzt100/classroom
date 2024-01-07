@@ -7,6 +7,7 @@ use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Str;
 use Illuminate\View\View as BaseView;
 use Illuminate\Support\Facades\View;
@@ -18,7 +19,8 @@ class ClassroomsController extends Controller
     {
 
         $classrooms = Classroom::orderBy('name', 'DESC')->get();
-        return view()->make('classrooms.index', compact('classrooms'));
+        $success=Session::get('success');
+        return View::make('classrooms.index', compact('classrooms','success'));
     }
 
 
@@ -43,7 +45,7 @@ class ClassroomsController extends Controller
         Classroom::create($request->all());
 
         // PRG =>  POST REDIRECT GET
-        return redirect()->route('classrooms.index');
+        return Redirect::route('classrooms.index')->with('success','classroom created');
 
     }
 
@@ -58,13 +60,18 @@ class ClassroomsController extends Controller
 
         $classroom->update($request->all());
 
-        return Redirect::route('classrooms.index');
+        return Redirect::route('classrooms.index')->with('success','classroom updated');
     }
 
     public function destroy($id) :RedirectResponse
     {
         Classroom::destroy($id);
-        return Redirect::route('classrooms.index');
+
+        // flash massages
+        // with redirect by with('name' , 'message') method
+        // return Redirect::route('classrooms.index')->with('success','classroom deleted');
+
+        return Redirect::route('classrooms.index')->with('success','classroom deleted');
     }
 
 

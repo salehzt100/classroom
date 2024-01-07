@@ -1,4 +1,6 @@
-@include('partial.header')
+@extends('layouts.master')
+@section('title','Edit Classroom '."$classroom->name")
+@section('content')
 <div class="container">
     <h1>Create classroom</h1>
     <form action="{{ route('classrooms.update', $classroom->id) }}" method="POST">
@@ -31,4 +33,4 @@
         <button type="submit" class="btn btn-primary">Update Room</button>
     </form>
 </div>
-@include('partial.footer')
+@endsection

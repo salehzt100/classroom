@@ -1,5 +1,6 @@
-@include('partial.header')
-<div class="container">
+@extends('layouts.master')
+@section('title','Create Classroom')
+@section('content')<div class="container">
     <h1>Create classroom</h1>
     <form action="{{route('classrooms.store')}}" method="post">
 
@@ -31,4 +32,4 @@
         <button type="submit" class="btn btn-primary">Create Room</button>
     </form>
 </div>
-@include('partial.footer')
+@endsection
