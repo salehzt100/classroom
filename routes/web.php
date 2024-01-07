@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ClassroomsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -13,6 +14,17 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+/*Route::view('/', 'welcome')->name('home');
+Route::get('classrooms/create', [ClassroomsController::class, 'create'])->name('classrooms.create');
+Route::post('/classrooms', [ClassroomsController::class, 'store'])->name('classrooms.store');
+Route::get('/classrooms', [ClassroomsController::class, 'index'])->name('classrooms.index');
+Route::get('/classrooms/{classroom}/edit', [ClassroomsController::class, 'edit'])->name('classrooms.edit');
+Route::put('/classrooms/{classroom}', [ClassroomsController::class, 'update'])->name('classrooms.update')->where(['id' => '\d+']);
+Route::get('/classrooms/{classroom}', [ClassroomsController::class, 'show'])->name('classrooms.show');
+Route::delete('/classrooms/{classroom}', [ClassroomsController::class, 'destroy'])->name('classrooms.destroy');*/
+Route::view('/', 'welcome')->name('home');
+
+// route model binding
+
+Route::resource('classrooms',ClassroomsController::class);
+
