@@ -2,7 +2,7 @@
 @section('title','Create Classroom')
 @section('content')<div class="container">
     <h1>Create classroom</h1>
-    <form action="{{route('classrooms.store')}}" method="post">
+    <form action="{{route('classrooms.store')}}" method="post" enctype="multipart/form-data">
 
                 {{--<input type="hidden" name="_token" value="{{csrf_token()}}">
                 {{csrf_field()}}

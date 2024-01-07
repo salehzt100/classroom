@@ -39,6 +39,15 @@ class ClassroomsController extends Controller
     public function store(Request $request): RedirectResponse
     {
 
+        if ($request->hasFile('cover_image'))
+        {
+            $file=$request->file('cover_image');  // UpLoadedFile
+            $path=$file->store('/covers','public');
+            $request->merge([
+                'cover_image_path'=>$path,
+            ]);
+        }
+
         $request->merge([
             'code' => Str::random(8)
         ]);

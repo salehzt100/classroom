@@ -26,6 +26,8 @@
             <input type="text" class="form-control" name='room' value="{{$classroom->room}} "  id="room" placeholder="Room">
             <label for="room">Room</label>
         </div>
+        <img src= "{{ Storage::disk('public')->url($classroom->cover_image_path)}}" class="card-img-top" alt>
+
         <div class="form-floating mb-3">
             <input type="file" class="form-control" name='cover_image' value="" id="cover_image" placeholder="Cover Image">
             <label for="cover_image">Cover Image</label>
