@@ -3,7 +3,7 @@
 @section('content')
 <div class="container">
     <h1>Create classroom</h1>
-    <form action="{{ route('classrooms.update', $classroom->id) }}" method="POST">
+    <form action="{{ route('classrooms.update', $classroom->id) }}" method="POST" enctype="multipart/form-data">
         {{--  Form Method Sppofing  --}}
         {{--  @method_field('patch') --}}
 
