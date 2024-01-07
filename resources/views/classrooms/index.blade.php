@@ -16,7 +16,10 @@
             <div class="col-md-3">
 
                 <div class="card">
-                     <img src="storage/{{$classroom->cover_image_path}}" class="card-img-top" alt>
+                    @if($classroom->cover_image_path)
+                        <img src="storage/{{$classroom->cover_image_path}}" class="card-img-top" alt>
+
+                    @endif
                     <div class="card-body">
                         <h5 class="card-title fs-2">{{$classroom->name}}</h5>
                         <p class="card-text">{{$classroom->section}}</p>

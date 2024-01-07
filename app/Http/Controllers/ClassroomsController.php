@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ClassroomRequest;
 use App\Models\Classroom;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\RedirectResponse;
@@ -26,29 +27,32 @@ class ClassroomsController extends Controller
 
     public function show(Classroom $classroom): BaseView
     {
-
         return View::make('classrooms.show', compact('classroom'));
     }
 
     public function create(): BaseView
     {
-        return view()->make('classrooms.create');
+        return view()->make('classrooms.create',[
+            'classroom'=>new Classroom(),
+        ]);
     }
 
 
-    public function store(Request $request): RedirectResponse
+    public function store(ClassroomRequest $request): RedirectResponse
     {
 
         if ($request->hasFile('cover_image')) {
             $file = $request->file('cover_image');  // UpLoadedFile
-            $path = $file->store('/covers', 'public');
+            $path = Classroom::uploadCoverImage($file);
             $request->merge([
                 'cover_image_path' => $path,
             ]);
         }
+
         $request->merge([
             'code' => Str::random(8)
         ]);
+
         Classroom::create($request->all());
 
         // PRG =>  POST REDIRECT GET
@@ -62,36 +66,41 @@ class ClassroomsController extends Controller
         return View::make('classrooms.edit', compact('classroom'));
     }
 
-    public function update(Request $request, Classroom $classroom): RedirectResponse
+    public function update(ClassroomRequest $request, Classroom $classroom): RedirectResponse
     {
+        $current_image = null;
         if ($request->hasFile('cover_image')) {
 
             $file = $request->file('cover_image');  // UpLoadedFile
-            $path = $file->store('/covers', 'public');
+            $path = Classroom::uploadCoverImage($file);
             $request->merge([
                 'cover_image_path' => $path,
             ]);
             $current_image = $classroom->getAttribute('cover_image_path');
 
-            if ($current_image) {
-                Storage::disk('public')->delete($current_image);
-            }
         }
 
         $classroom->update($request->all());
 
-        return Redirect::route('classrooms.index')->with('success', 'classroom updated');
-    }
-
-    public function destroy(Classroom $classroom ): RedirectResponse
-    {
-
-        $current_image = $classroom->getAttribute('cover_image_path');
-        if ($current_image != null && Storage::disk('public')->exists($current_image)) {
+        if ($current_image) {
             Storage::disk('public')->delete($current_image);
         }
 
+        return Redirect::route('classrooms.index')->with('success', 'classroom updated');
+    }
+
+    public function destroy(Classroom $classroom): RedirectResponse
+    {
+        $old_classroom = $classroom;  // copy of resource before deleting
         Classroom::destroy($classroom->getAttribute('id'));
+
+        $current_image = $old_classroom->getAttribute('cover_image_path');
+
+        if ($current_image != null && Storage::disk(Classroom::$disk)->exists($current_image)) {
+
+            Classroom::deleteCoverImage($current_image);
+        }
+
 
         // flash massages
         // with redirect by with('name' , 'message') method
