@@ -28,3 +28,5 @@ Route::view('/', 'welcome')->name('home');
 
 Route::resource('classrooms',ClassroomsController::class);
 
+Route::get('/login',[\App\Http\Controllers\LoginController::class,'create'])->name('login');
+Route::post('/login',[\App\Http\Controllers\LoginController::class,'store']);
