@@ -21,12 +21,17 @@ class LoginController extends Controller
             'password'=>'required'
         ]);
 
-       $user= User::where('email','=',$request->email)->first();
-       if ($user && Hash::check($request->password,$user->password))
-       {
-        Auth::login($user,$request->boolean('remember'));
+        $credential=[
+            'email'=>$request->email,
+            'password'=>$request->password,
+            //'status'=>'active'
+        ];
 
-        return redirect()->route('classrooms.index');
+        $result=Auth::attempt($credential,$request->boolean('remember'));
+
+        if ($result)
+       {
+        return redirect()->intended();
        }
        return back()->withInput()->withErrors([
            'email'=>'Invalid Credential'
