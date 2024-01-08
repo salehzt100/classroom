@@ -1,49 +1,22 @@
-@extends('layouts.master')
-{{--  auto escape ,  jsut insert string not tag--}}
-@section('title','Classrooms')
-@section('content')
+
+<x-main-layout title="Classroom">
+
 <div class="container">
     <h1 class="mb-5"> Classrooms</h1>
-    @if($success)
-        <div class="alert alert-success">
-            {{$success}}
-        </div>
 
-    @endif
+    <x-alert name="success" class="alert-success" />
+
+    <x-alert name="error" class="alert-danger" />
 
     <div class="row">
         @foreach($classrooms as $classroom)
-            <div class="col-md-3">
-
-                <div class="card">
-                    @if($classroom->cover_image_path)
-                        <img src="storage/{{$classroom->cover_image_path}}" class="card-img-top" alt>
-
-                    @endif
-                    <div class="card-body">
-                        <h5 class="card-title fs-2">{{$classroom->name}}</h5>
-                        <p class="card-text">{{$classroom->section}}</p>
-                        <div class="d-inline-flex gap-1">
-                            <a href="{{route('classrooms.show',$classroom->id)}}" class="btn btn-primary">Show</a>
-                            <a href="{{route('classrooms.edit',$classroom->id)}}" class="btn btn-success">Update</a>
-                            <form action="{{route('classrooms.destroy',$classroom->id)}}" method="post">
-                                @csrf
-                                @method('delete')
-                                <input type="submit" value="Delete" class="btn btn-danger"></input>
-
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
+            <x-classroom-card :classroom="$classroom" />
         @endforeach
     </div>
 
 
 </div>
-@endsection
 @push('scripts')
     <script>console.log('@@stack')</script>
 @endpush
-
+</x-main-layout>

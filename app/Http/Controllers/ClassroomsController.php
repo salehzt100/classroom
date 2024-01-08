@@ -21,7 +21,9 @@ class ClassroomsController extends Controller
     {
         $classrooms = Classroom::orderBy('name', 'DESC')->get();
         $success = Session::get('success');
-        return View::make('classrooms.index', compact('classrooms', 'success'));
+        $error = Session::get('error');
+
+        return View::make('classrooms.index', compact(['classrooms', 'success','error']));
     }
 
 
@@ -86,7 +88,7 @@ class ClassroomsController extends Controller
             Storage::disk('public')->delete($current_image);
         }
 
-        return Redirect::route('classrooms.index')->with('success', 'classroom updated');
+        return Redirect::route('classrooms.index')->with('success', 'classroom updated')->with('error', 'classroom not updated');
     }
 
     public function destroy(Classroom $classroom): RedirectResponse
