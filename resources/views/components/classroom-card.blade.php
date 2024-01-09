@@ -8,7 +8,7 @@
         <div class="card-body">
             <h5 class="card-title fs-2">{{$classroom->name}}</h5>
             <p class="card-text">{{$classroom->section}}</p>
-            <div class="d-inline-flex gap-1">
+            <div class="d-flex justify-content-between">
                 <a href="{{route('classrooms.show',$classroom->id)}}" class="btn btn-primary">Show</a>
                 <a href="{{route('classrooms.edit',$classroom->id)}}" class="btn btn-success">Update</a>
                 <form action="{{route('classrooms.destroy',$classroom->id)}}" method="post">

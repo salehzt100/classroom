@@ -7,6 +7,7 @@ use App\Models\Classroom;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Storage;
@@ -19,13 +20,15 @@ class ClassroomsController extends Controller
 
     public function index(Request $request): Renderable
     {
-        $classrooms = Classroom::orderBy('name', 'DESC')->get();
+        $classrooms = Classroom::active()
+            ->recent()
+            ->orderBy('name', 'DESC')
+            ->get();
         $success = Session::get('success');
         $error = Session::get('error');
 
-        return View::make('classrooms.index', compact(['classrooms', 'success','error']));
+        return View::make('classrooms.index', compact(['classrooms', 'success', 'error']));
     }
-
 
     public function show(Classroom $classroom): BaseView
     {
@@ -34,11 +37,10 @@ class ClassroomsController extends Controller
 
     public function create(): BaseView
     {
-        return view()->make('classrooms.create',[
-            'classroom'=>new Classroom(),
+        return view()->make('classrooms.create', [
+            'classroom' => new Classroom(),
         ]);
     }
-
 
     public function store(ClassroomRequest $request): RedirectResponse
     {
@@ -55,6 +57,9 @@ class ClassroomsController extends Controller
             'code' => Str::random(8)
         ]);
 
+        $request->merge([
+            'user_id'=>Auth::id()
+        ]);
         Classroom::create($request->all());
 
         // PRG =>  POST REDIRECT GET
@@ -88,21 +93,14 @@ class ClassroomsController extends Controller
             Storage::disk('public')->delete($current_image);
         }
 
-        return Redirect::route('classrooms.index')->with('success', 'classroom updated')->with('error', 'classroom not updated');
+        return Redirect::route('classrooms.index')->with('success', 'classroom updated')->with('error', null);
     }
 
     public function destroy(Classroom $classroom): RedirectResponse
     {
-        $old_classroom = $classroom;  // copy of resource before deleting
-        Classroom::destroy($classroom->getAttribute('id'));
+        $classroom->delete();
 
-        $current_image = $old_classroom->getAttribute('cover_image_path');
-
-        if ($current_image != null && Storage::disk(Classroom::$disk)->exists($current_image)) {
-
-            Classroom::deleteCoverImage($current_image);
-        }
-
+        //Classroom::deleteCoverImage($classroom->getAttribute('cover_image_path'));
 
         // flash massages
         // with redirect by with('name' , 'message') method
@@ -110,6 +108,34 @@ class ClassroomsController extends Controller
 
         return Redirect::route('classrooms.index')->with('success', 'classroom deleted');
     }
+
+    public function trashed() :Renderable
+    {
+        $classrooms=Classroom::onlyTrashed()
+            ->latest('deleted_at')
+            ->get();
+
+        return view('classrooms.trashed',compact('classrooms'));
+    }
+    public function restore($id)
+    {
+        $classroom=Classroom::onlyTrashed()->findOrFail($id);
+        $classroom->restore();
+
+        return Redirect::route('classrooms.index')->with('success',"Classroom ({$classroom->name}) Restored");
+    }
+    public function forceDelete($id){
+
+        $classroom=Classroom::withTrashed()->findOrFail($id);
+        $classroom->forceDelete();
+        Classroom::deleteCoverImage($classroom->getAttribute('cover_image_path'));
+
+        return Redirect::route('classrooms.trashed')
+            ->with('success',"Classroom ({$classroom->name}) deleted forever!");
+
+    }
+
+
 
 
 }

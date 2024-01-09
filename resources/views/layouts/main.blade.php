@@ -47,7 +47,7 @@
                     </li>
                 </ul>
                 <div class="text text-success m-2">
-                    {{Auth::user()->name}}
+                    {{Auth::user()?->name}}
                 </div>
                 <form class="d-flex" role="search">
                     <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">

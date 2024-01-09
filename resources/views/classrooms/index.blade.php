@@ -1,5 +1,5 @@
 
-<x-main-layout title="Classroom">
+<x-main-layout title="Classrooms">
 
 <div class="container">
     <h1 class="mb-5"> Classrooms</h1>
