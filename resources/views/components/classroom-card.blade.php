@@ -2,7 +2,7 @@
 
     <div class="card">
         @if($classroom->cover_image_path)
-            <img src="storage/{{$classroom->cover_image_path}}" class="card-img-top" alt>
+            <img src="{{asset('storage/'.$classroom->cover_image_path)}}" class="card-img-top" alt>
 
         @endif
         <div class="card-body">

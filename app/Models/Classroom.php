@@ -2,11 +2,13 @@
 
 namespace App\Models;
 
+use App\Models\Scopes\UserClassroomScope;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 class Classroom extends Model
 {
@@ -34,9 +36,12 @@ class Classroom extends Model
     }
     protected static function booted()
     {
-        static::addGlobalScope('user',function (Builder $query){
-            $query->where('user_id','=',Auth::id());
-        });
+        static::addGlobalScope(new UserClassroomScope());
+
+
+//        static::addGlobalScope('user',function (Builder $query){
+//            $query->where('user_id','=',Auth::id());
+//        });
 
 
         // I can use withoutGlobalScope({name of global scope }) or withoutGlobalScopes() to avoid  scopes
@@ -67,5 +72,15 @@ class Classroom extends Model
     {
         $query->where('status','=',$status);
 
+    }
+
+    public function join(string $user_id , string $role='student')
+    {
+       return DB::table('classroom_user')->insert([
+            'classroom_id'=>$this->id ,
+            'user_id'=>$user_id,
+            'role'=>$role,
+            'created_at'=>now(),
+        ]);
     }
 }

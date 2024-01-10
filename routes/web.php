@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ClassroomsController;
+use App\Http\Controllers\JoinClassroomController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TopicsController;
 use Illuminate\Support\Facades\Route;
@@ -54,6 +55,11 @@ Route::middleware(['auth'])->group(function () {
             Route::delete('/{classroom}', 'forceDelete')->name('forceDelete');
 
         });
+
+    Route::get('/classrooms/{classroom}/join',[JoinClassroomController::class,'create'])
+        ->middleware('signed')
+        ->name('classrooms.join');
+    Route::post('/classrooms/{classroom}/join',[JoinClassroomController::class,'store']);
 
 
     //// route model binding

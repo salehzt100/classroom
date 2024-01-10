@@ -22,6 +22,8 @@ return new class extends Migration
                 ->nullable()
                 ->constrained()
                 ->nullOnDelete();
+            $table->string('title');
+            $table->text('instruction')->nullable();
 
         });
     }
