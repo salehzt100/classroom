@@ -34,23 +34,17 @@ class ClassroomsController extends Controller
         return View::make('classrooms.index', compact(['classrooms', 'success', 'error']));
     }
 
-    public function show(Classroom $classroom): BaseView
+    public function show( $id): BaseView
     {
 
         /// signed Url  dont change ulr by add {signature} and middleware {signed}
         ///  URL::signedRoute()    or URL::temporarySignedRoute('',expire,'')   and expiration time
         ///   used in invitation link  and use in email verification
 
-
-        $invitation_link = URL::signedRoute('classrooms.join', [
-            'classroom' => $classroom->id,
-            'code' => $classroom->code,
-        ]);
+        $classroom = Classroom::with(['posts.comments.user'])->find($id);
 
         return View::make('classrooms.show')->with([
             'classroom' => $classroom,
-            "invitation_link" => $invitation_link
-
         ]);
     }
 
@@ -72,20 +66,21 @@ class ClassroomsController extends Controller
             ]);
         }
 
-        $request->merge([
-            'code' => Str::random(8)
-        ]);
-
-        $request->merge([
-            'user_id' => Auth::id()
-        ]);
-
         ///  database transaction
         /// connect all action that occur on database in one { transaction }
         ///  in sql , commit , each action do commit by default { auto commit }
         ///
         ///
         ///
+
+        // can use transaction()
+        /*
+         * DB::transaction(function (Request $request){
+         * $classroom = Classroom::create($request->all());
+         *
+         * $classroom->join(Auth::id(), 'teacher');
+         *
+         * });*/
 
         DB::beginTransaction();     // start transaction and stop auto commit
 
@@ -142,7 +137,6 @@ class ClassroomsController extends Controller
         $classroom->delete();
 
         //Classroom::deleteCoverImage($classroom->getAttribute('cover_image_path'));
-
         // flash massages
         // with redirect by with('name' , 'message') method
         // return Redirect::route('classrooms.index')->with('success','classroom deleted');
@@ -171,8 +165,10 @@ class ClassroomsController extends Controller
     {
 
         $classroom = Classroom::withTrashed()->findOrFail($id);
+
         $classroom->forceDelete();
-        Classroom::deleteCoverImage($classroom->getAttribute('cover_image_path'));
+
+//        Classroom::deleteCoverImage($classroom->getAttribute('cover_image_path'));
 
         return Redirect::route('classrooms.trashed')
             ->with('success', "Classroom ({$classroom->name}) deleted forever!");

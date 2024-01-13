@@ -9,16 +9,29 @@ class Topic extends Model
 {
     use HasFactory;
 
-/**    const CREATED_AT = 'created_at';
-    const UPDATED_AT = 'updated_at';
-    protected $connection='mysql';
+    /**    const CREATED_AT = 'created_at';
+     * const UPDATED_AT = 'updated_at';
+     * protected $connection='mysql';
+     *
+     * protected $table='topics';
+     * protected $primaryKey='id';
+     * protected $keyType='int';
+     * public $incrementing=true;
+     */
 
-    protected $table='topics';
-    protected $primaryKey='id';
-    protected $keyType='int';
-    public $incrementing=true;
- */
-    public $timestamps=false;
+
+    protected $fillable = [
+        'name',
+        'classroom_id',
+        'user_id'
+    ];
+
+    public $timestamps = false;
+
+    public function classrooms()
+    {
+        return $this->hasMany(Classwork::class);
+    }
 
 
 }

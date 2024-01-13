@@ -4,6 +4,9 @@ namespace App\Models;
 
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
@@ -42,4 +45,46 @@ class User extends Authenticatable implements MustVerifyEmail
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+
+
+
+    public function classrooms() :BelongsToMany
+    {
+        return $this->belongsToMany(
+            Classroom::class,           // related model
+            'classroom_user',       // pivot table
+            'user_id', // FK for current model in pivot table
+            'classroom_id',      // FK for related model in pivot table
+            'id',               // PK for currant model
+            'id'                // PK for related model
+
+        )->withPivot(['role','created_at']);
+    }
+
+    public function createdClassroom() :HasMany
+    {
+        return $this->hasMany(Classroom::class,'user_id');
+    }
+
+    public function classworks() :BelongsToMany
+    {
+        return $this->belongsToMany(Classwork::class)
+            ->withPivot(['grade','submitted_at','status','created_at'])
+            ->using(ClassworkUser::class);
+    }
+
+    public function comments() :HasMany
+    {
+        return $this->hasMany(Comment::class);
+    }
+
+    protected $appends =['user_image'];
+    public function getUserImageAttribute()
+    {
+        $name=explode(' ',$this->name);
+        return "https://ui-avatars.com/api/?name={$name[0]}}+{$name[1]}";
+    }
+
+
 }

@@ -19,47 +19,46 @@ class JoinClassroomController extends Controller
             ->findOrFail($id);
 
         try {
-            $this->exists($id,Auth::id());
+            $this->exists($id, Auth::id());
 
-        }catch (Exception $e){
-            return redirect()->route('classrooms.show',$id);
+        } catch (Exception $e) {
+            return redirect()->route('classrooms.show', $id);
         }
-        return view('classrooms.join',compact('classroom'));
+        return view('classrooms.join', compact('classroom'));
     }
 
-    public function store(Request $request,$id)
+    public function store(Request $request, $id)
     {
         $request->validate([
-           'role'=>'in:student,teacher'
+            'role' => 'in:student,teacher'
         ]);
 
-        $classroom=Classroom::withoutGlobalScope(UserClassroomScope::class)
+        $classroom = Classroom::withoutGlobalScope(UserClassroomScope::class)
             ->active()
             ->findOrFail($id);
 
         try {
 
-            $this->exists($id,Auth::id());
+            $classroom->join(Auth::id(), $request->input('role', 'student'));
 
-        }catch (\Exception $e){
-            return redirect()->route('classrooms.show',$id);
+        } catch (\Exception $e) {
+            return redirect()->route('classrooms.show', $id);
         }
 
-        $classroom->join(Auth::id(),$request->input('role','student'));
 
-        return redirect()->route('classrooms.show',$id);
+        return redirect()->route('classrooms.show', $id);
 
     }
 
 
-    protected function exists($classroom_id,$user_id)
+    protected function exists($classroom, $user_id)
     {
-        $exists = DB::table('classroom_user')
-            ->where('classroom_id','=',$classroom_id)
-            ->where('user_id','=',$user_id)
+
+        $exists = $classroom->users()
+            ->where('id', '=', $user_id)
             ->exists();
 
-        if ($exists){
+        if ($exists) {
             throw new \Exception('this user joined in this classroom');
         }
 

@@ -6,9 +6,27 @@
     <title>{{$title}}</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <x-head.tinymce-config/>
+{{--    <script src="https://cdn.tiny.cloud/1/ypd4cvvgeu7d0tb1xnaimv4xwd08nk40dspr2izixb25s4rs/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>--}}
     @stack('styles')
+    <style>
+        body {
+            min-height: 100vh;
+            position: relative;
+            margin: 0;
+            padding-bottom: 70px;
+            box-sizing: border-box;
+        }
+        footer {
+            position: absolute;
+            bottom: 0;
+            height: 70px;
+            width: 100%;
+
+        }
+    </style>
 </head>
-<body class="d-flex flex-column min-vh-100">
+<body class="d-flex flex-column  min-vh-100">
 
 <header class="mb-5">
     <nav class="navbar navbar-expand-lg bg-body-tertiary" data-bs-theme="dark">
@@ -57,30 +75,32 @@
         </div>
     </nav>
 </header>
+<main class="min-vh-120">
+    {{$slot}}
+</main>
+<footer class="container d-flex flex-wrap justify-content-start align-items-center py-3 my-4 border-top  ">
+    <p class="col-md-12 mb-0 text-muted text-center">© 2024 {{ config('app.name') }} | Developed by Saleh Zetawi</p>
 
-<main>
-    {{$slot}}</main>
-<footer class="d-flex flex-wrap justify-content-between align-items-center py-3 my-4 border-top">
-    <p class="col-md-4 mb-0 text-muted">© 2024 {{ config('app.name') }}, Inc</p>
+{{--    <a href="/"--}}
+{{--       class="col-md-4 d-flex align-items-center justify-content-center mb-3 mb-md-0 me-md-auto link-dark text-decoration-none">--}}
+{{--        <svg class="bi me-2" width="40" height="32">--}}
+{{--            <use xlink:href="#bootstrap"></use>--}}
+{{--        </svg>--}}
+{{--    </a>--}}
 
-    <a href="/"
-       class="col-md-4 d-flex align-items-center justify-content-center mb-3 mb-md-0 me-md-auto link-dark text-decoration-none">
-        <svg class="bi me-2" width="40" height="32">
-            <use xlink:href="#bootstrap"></use>
-        </svg>
-    </a>
-
-    <ul class="nav col-md-4 justify-content-end">
-        <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">Home</a></li>
-        <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">Features</a></li>
-        <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">Pricing</a></li>
-        <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">FAQs</a></li>
-        <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">About</a></li>
-    </ul>
+{{--    <ul class="nav col-md-4 justify-content-end">--}}
+{{--        <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">Home</a></li>--}}
+{{--        <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">Features</a></li>--}}
+{{--        <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">Pricing</a></li>--}}
+{{--        <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">FAQs</a></li>--}}
+{{--        <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">About</a></li>--}}
+{{--    </ul>
+--}}
 </footer>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
         crossorigin="anonymous"></script>
+
 @stack('scripts')
 </body>
 </html>

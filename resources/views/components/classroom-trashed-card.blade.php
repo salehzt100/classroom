@@ -1,10 +1,8 @@
 <div class="col-md-3">
 
     <div class="card">
-        @if($classroom->cover_image_path)
-            <img src="{{asset('storage/'.$classroom->cover_image_path)}}" class="card-img-top" alt>
+            <img src="{{$classroom->cover_image_url}}" class="card-img-top" alt>
 
-        @endif
         <div class="card-body">
             <h5 class="card-title fs-2">{{$classroom->name}}</h5>
             <p class="card-text">{{$classroom->section}}</p>
