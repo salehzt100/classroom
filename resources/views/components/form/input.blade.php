@@ -4,6 +4,10 @@
         'label'
         ])
 
+@php
+
+@endphp
+
 <input value="{{old($name,$value)}}"
        name="{{$name}}"
        id="{{$id ?? $name}}"

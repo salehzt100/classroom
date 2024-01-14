@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\View;
+use Illuminate\Validation\Rule;
 
 class ClassworkController extends Controller
 {
@@ -40,9 +41,6 @@ class ClassworkController extends Controller
 
         $type=$this->getType($request);
 
-        $request->validate([
-            ''
-        ]);
 
         $topics=$classroom->topics;
 
@@ -57,14 +55,18 @@ class ClassworkController extends Controller
      */
     public function store(Request $request, Classroom $classroom): RedirectResponse
     {
+        $type = $this->getType();
         $request->validate([
             'title' => ['required', 'string', 'max:255'],
             'description' => ['nullable', 'string'],
             'topic_id' => ['nullable', 'integer', 'exists:topics,id'],
+            'options_grade'=>[Rule::requiredIf(fn()=> $type == Classwork::TYPE_ASSIGNMENT),'numeric','min:0'],
+            'options_due'=>['nullable','date','after:published_at']
         ]);
 
-        $type = $this->getType();
-
+        $request->merge([
+            'options'=>$request->input('options')
+        ]);
         $request->merge([
             'user_id' => Auth::id(),
             'type' => $type
@@ -100,7 +102,7 @@ DB::transaction(function () use($request,$classroom){
     public function edit(Request $request ,Classroom $classroom, Classwork $classwork): Renderable
     {
         $assigned=$classwork->users()->pluck('id')->toArray();
-        $type=$this->getType($request);
+        $type=$classwork->type->value;
 
         return View::make('classworks.edit', compact('classroom','classwork','type','assigned'));
     }
@@ -111,14 +113,33 @@ DB::transaction(function () use($request,$classroom){
     public function update(Request $request, Classroom $classroom,Classwork $classwork): RedirectResponse
     {
 
-        $type=$classwork->type;
+        $type = $classwork->type;
 
-        $classwork->update(request()->all());
-        $classwork->users()->sync($request->input('students'));
 
-        return back()->with([
-            'classroom_id'=>$classroom->id,
-            'classwork_id'=>$classwork->id,
+        $request->validate([
+            'title' => ['required', 'string', 'max:255'],
+            'description' => ['nullable', 'string'],
+            'topic_id' => ['nullable', 'integer', 'exists:topics,id'],
+            'options.grade'=>[Rule::requiredIf(fn()=> $type == Classwork::TYPE_ASSIGNMENT),'numeric','min:0'],
+            'options.due'=>['nullable','date','after:published_at']
+        ]);
+
+        $request->merge([
+            'options'=>$request->input('options')
+        ]);
+
+
+        DB::transaction(function () use($request,$classwork){
+
+             $classwork->update(request()->all());
+
+            $classwork->users()->sync($request->input('students'));
+
+        });
+
+
+
+        return Redirect::route('classrooms.classworks.show',[$classroom->id,$classwork->id])->with([
             'success' => 'classwork updated!',
         ]);
 
