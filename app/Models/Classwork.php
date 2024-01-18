@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Enums\ClassworkTypes;
 use DateTime;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -78,5 +79,25 @@ class Classwork extends Model
         if ($this->published_at) {
             return $this->published_at->format('Y-m-d');
         }
+    }
+
+    public function scopeFilter(Builder $builder, $filters)
+    {
+
+        $builder->when($filters['search'] ?? '', function ($builder, $value) {
+            $builder->where(function ($builder) use ($value) {
+                $builder->where('title', 'LIKE', "%{$value}%")
+                    ->orWhere('description', 'LIKE', "%{$value}%");
+            });
+
+        })
+            ->when($filters['type'] ?? '', function ($builder, $value) {
+                $builder->where('type', '=', "{$value}");
+            });
+
+    }
+    public function submissions()
+    {
+        return $this->hasMany(Submission::class);
     }
 }

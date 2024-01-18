@@ -42,7 +42,7 @@
                 <h3>Posts</h3>
 
                 <hr>
-                @foreach($classroom->posts as $post)
+                @foreach($classroom->posts()->with('comments')->with('user')->latest()->get() as $post)
 
                     <div class="card mb-3">
                         <div class="card-body">
@@ -59,7 +59,7 @@
 
                             <div class="border-top">
 
-                                <div class="comments pt-3">
+                                <div class="comments pt-3" id="comments-{{$post->id}}">
                                     @foreach($post->comments as $comment)
                                         <div class="row pt-3">
                                             <div class="col-md-1">

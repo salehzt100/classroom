@@ -7,7 +7,9 @@ use App\Http\Controllers\CommentController;
 use App\Http\Controllers\JoinClassroomController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\SubmissionController;
 use App\Http\Controllers\TopicsController;
+use App\Models\Submission;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -87,6 +89,11 @@ Route::middleware(['auth'])->group(function () {
     Route::post('classrooms/{classroom}/posts',[PostController::class,'store'])
         ->name('posts.store');
 
+    Route::post('classworks/{classwork}/submissions',[SubmissionController::class,'store'])
+        ->name('submissions.store');
+
+    Route::get('submissions/{submission}/file',[SubmissionController::class,'file'])
+        ->name('submissions.file');
 
 });
 

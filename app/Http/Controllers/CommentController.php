@@ -27,7 +27,7 @@ class CommentController extends Controller
         ]);
 
 
-        return back()->with('success','comment added');
+        return back()->with('success','comment added')->withFragment("comments-$request->id");
 
     }
 

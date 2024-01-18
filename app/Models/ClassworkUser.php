@@ -10,8 +10,7 @@ class ClassworkUser extends Pivot
 {
     use HasFactory;
     public $timestamps=false;
-    public function setUpdatedAt($key)
+    public function getUpdatedAtColumn()
     {
-        return $this;
     }
 }

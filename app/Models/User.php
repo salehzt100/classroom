@@ -86,5 +86,9 @@ class User extends Authenticatable implements MustVerifyEmail
         return "https://ui-avatars.com/api/?name={$name[0]}}+{$name[1]}";
     }
 
+    public function submissions()
+    {
+        return $this->hasMany(Submission::class);
+    }
 
 }

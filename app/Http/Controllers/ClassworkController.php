@@ -18,36 +18,40 @@ class ClassworkController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(Classroom $classroom): Renderable
+    public function index(Request $request, Classroom $classroom): Renderable
     {
+
         $classworks = $classroom->classworks()
             ->with('topic')
-            ->orderBy('published_at')
-            ->get();
+            ->filter($request->query())
+            ->latest('published_at')
+            ->simplePaginate(3)->fragment('classworks');
+
+
         // ->lazy()
 
 
         return View::make('classworks.index', [
-                'classroom'=>$classroom,
-                'classworks'=>$classworks->groupBy('topic_id')
-            ]);
+            'classroom' => $classroom,
+            'classworks' => $classworks
+        ]);
     }
 
     /**
      * Show the form for creating a new resource.
      */
-    public function create(Request $request ,Classroom $classroom): Renderable
+    public function create(Request $request, Classroom $classroom): Renderable
     {
 
-        $type=$this->getType($request);
+        $type = $this->getType($request);
 
 
-        $topics=$classroom->topics;
+        $topics = $classroom->topics;
 
-        $classwork=new Classwork();
+        $classwork = new Classwork();
 
 
-        return View::make('classworks.create', compact('classroom' ,'classwork',"topics",'type'));
+        return View::make('classworks.create', compact('classroom', 'classwork', "topics", 'type'));
     }
 
     /**
@@ -60,12 +64,12 @@ class ClassworkController extends Controller
             'title' => ['required', 'string', 'max:255'],
             'description' => ['nullable', 'string'],
             'topic_id' => ['nullable', 'integer', 'exists:topics,id'],
-            'options_grade'=>[Rule::requiredIf(fn()=> $type == Classwork::TYPE_ASSIGNMENT),'numeric','min:0'],
-            'options_due'=>['nullable','date','after:published_at']
+            'options_grade' => [Rule::requiredIf(fn() => $type == Classwork::TYPE_ASSIGNMENT), 'numeric', 'min:0'],
+            'options_due' => ['nullable', 'date', 'after:published_at']
         ]);
 
         $request->merge([
-            'options'=>$request->input('options')
+            'options' => $request->input('options')
         ]);
         $request->merge([
             'user_id' => Auth::id(),
@@ -73,14 +77,14 @@ class ClassworkController extends Controller
         ]);
 
 
-DB::transaction(function () use($request,$classroom){
+        DB::transaction(function () use ($request, $classroom) {
 
-    $classwork = $classroom->classworks()->create(request()->all());
+            $classwork = $classroom->classworks()->create(request()->all());
 
 
-    $classwork->users()->attach($request->students);
+            $classwork->users()->attach($request->students);
 
-});
+        });
 
 
         return redirect()->route('classrooms.classworks.index', $classroom->id)
@@ -92,25 +96,27 @@ DB::transaction(function () use($request,$classroom){
      */
     public function show(Classroom $classroom, Classwork $classwork): Renderable
     {
-        $comments=$classwork->comments()->get();
-        return View::make('classworks.show', compact('classroom', 'classwork','comments'));
+        $comments = $classwork->comments()->get();
+        $submissions=$classwork->submissions()->where('user_id','=',Auth::id())->get();
+
+        return View::make('classworks.show', compact('classroom', 'classwork', 'comments','submissions'));
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Request $request ,Classroom $classroom, Classwork $classwork): Renderable
+    public function edit(Request $request, Classroom $classroom, Classwork $classwork): Renderable
     {
-        $assigned=$classwork->users()->pluck('id')->toArray();
-        $type=$classwork->type->value;
+        $assigned = $classwork->users()->pluck('id')->toArray();
+        $type = $classwork->type->value;
 
-        return View::make('classworks.edit', compact('classroom','classwork','type','assigned'));
+        return View::make('classworks.edit', compact('classroom', 'classwork', 'type', 'assigned'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Classroom $classroom,Classwork $classwork): RedirectResponse
+    public function update(Request $request, Classroom $classroom, Classwork $classwork): RedirectResponse
     {
 
         $type = $classwork->type;
@@ -120,26 +126,25 @@ DB::transaction(function () use($request,$classroom){
             'title' => ['required', 'string', 'max:255'],
             'description' => ['nullable', 'string'],
             'topic_id' => ['nullable', 'integer', 'exists:topics,id'],
-            'options.grade'=>[Rule::requiredIf(fn()=> $type == Classwork::TYPE_ASSIGNMENT),'numeric','min:0'],
-            'options.due'=>['nullable','date','after:published_at']
+            'options.grade' => [Rule::requiredIf(fn() => $type == Classwork::TYPE_ASSIGNMENT), 'numeric', 'min:0'],
+            'options.due' => ['nullable', 'date', 'after:published_at']
         ]);
 
         $request->merge([
-            'options'=>$request->input('options')
+            'options' => $request->input('options')
         ]);
 
 
-        DB::transaction(function () use($request,$classwork){
+        DB::transaction(function () use ($request, $classwork) {
 
-             $classwork->update(request()->all());
+            $classwork->update(request()->all());
 
             $classwork->users()->sync($request->input('students'));
 
         });
 
 
-
-        return Redirect::route('classrooms.classworks.show',[$classroom->id,$classwork->id])->with([
+        return Redirect::route('classrooms.classworks.show', [$classroom->id, $classwork->id])->with([
             'success' => 'classwork updated!',
         ]);
 
