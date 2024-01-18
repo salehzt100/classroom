@@ -78,6 +78,7 @@
             </div>
             <div class="col-md-4">
 
+                @can('submission.create',[$classwork])
                 <div class="bordered rounded p-3 bg-light ">
                     <h4> Submissions </h4>
                     @if($submissions->count())
@@ -109,6 +110,7 @@
 
                     @endif
                 </div>
+                @endcan
             </div>
         </div>
 

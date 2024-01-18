@@ -3,6 +3,8 @@
         <h1 class="mb-3"> {{$classroom->name}}</h1>
         <h3 class="mb-4">Classworks</h3>
 
+
+        @can('classwork.create',[$classroom])
         <div class="btn-group dropend">
             <button type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown"
                     aria-expanded="false">
@@ -20,6 +22,7 @@
                 </li>
             </ul>
         </div>
+        @endcan
         <hr class="m-4">
 
         <x-alert name="success" class="alert-success"/>

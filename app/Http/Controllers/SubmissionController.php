@@ -9,12 +9,14 @@ use App\Rules\ForbiddenFile;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
 
 class SubmissionController extends Controller
 {
 
     public function store(Request $request, Classwork $classwork)
     {
+        Gate::authorize('submission.create',[$classwork]);
         $request->validate([
             'files.*' => ['file', new ForbiddenFile(['application/x-php', 'application/x-msdownload'])]
         ]);

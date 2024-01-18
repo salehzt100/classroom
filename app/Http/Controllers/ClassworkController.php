@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\ClassworkTypes;
 use App\Models\Classroom;
 use App\Models\Classwork;
 use Illuminate\Contracts\Support\Renderable;
@@ -9,6 +10,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\View;
 use Illuminate\Validation\Rule;
@@ -42,6 +44,7 @@ class ClassworkController extends Controller
      */
     public function create(Request $request, Classroom $classroom): Renderable
     {
+        Gate::authorize('classwork.create',[$classroom]);
 
         $type = $this->getType($request);
 
@@ -59,7 +62,7 @@ class ClassworkController extends Controller
      */
     public function store(Request $request, Classroom $classroom): RedirectResponse
     {
-        $type = $this->getType();
+        $type = $this->getType($request);
         $request->validate([
             'title' => ['required', 'string', 'max:255'],
             'description' => ['nullable', 'string'],
@@ -73,7 +76,7 @@ class ClassworkController extends Controller
         ]);
         $request->merge([
             'user_id' => Auth::id(),
-            'type' => $type
+            'type' => $type,
         ]);
 
 
@@ -96,6 +99,8 @@ class ClassworkController extends Controller
      */
     public function show(Classroom $classroom, Classwork $classwork): Renderable
     {
+        Gate::authorize('classwork.view',[$classwork]);
+
         $comments = $classwork->comments()->get();
         $submissions=$classwork->submissions()->where('user_id','=',Auth::id())->get();
 
@@ -109,6 +114,7 @@ class ClassworkController extends Controller
     {
         $assigned = $classwork->users()->pluck('id')->toArray();
         $type = $classwork->type->value;
+
 
         return View::make('classworks.edit', compact('classroom', 'classwork', 'type', 'assigned'));
     }
@@ -164,16 +170,17 @@ class ClassworkController extends Controller
     protected function getType()
     {
 
-        $type = request('type');
+        $type = ClassworkTypes::from(request('type'));
+
         $allowedType = [
-            'assignment',
-            'question',
-            'material'
+            Classwork::TYPE_ASSIGNMENT,
+            Classwork::TYPE_QUESTION,
+            Classwork::TYPE_MATERIAL,
         ];
         if (!in_array($type, $allowedType)) {
             $type = Classwork::TYPE_ASSIGNMENT;
         }
-        return $type;
+        return $type->value;
     }
 }
 

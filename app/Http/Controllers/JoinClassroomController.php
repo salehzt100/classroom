@@ -19,7 +19,7 @@ class JoinClassroomController extends Controller
             ->findOrFail($id);
 
         try {
-            $this->exists($id, Auth::id());
+            $this->exists($classroom, Auth::id());
 
         } catch (Exception $e) {
             return redirect()->route('classrooms.show', $id);
@@ -51,7 +51,7 @@ class JoinClassroomController extends Controller
     }
 
 
-    protected function exists($classroom, $user_id)
+    protected function exists(Classroom $classroom, $user_id)
     {
 
         $exists = $classroom->users()
