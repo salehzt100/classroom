@@ -23,20 +23,12 @@
 
                 <form action="{{route('posts.store',$classroom->id)}}" method="post">
                     @csrf
-                    <textarea class="description" name="content" placeholder="Announce Something To Your Class">
+                    <textarea class="description" id="description" name="content"
+                              placeholder="Announce Something To Your Class">
                 </textarea>
-                    <input type="submit" class="btn btn-primary">
-                </form>
-                <script
-                    src="https://cdn.tiny.cloud/1/ypd4cvvgeu7d0tb1xnaimv4xwd08nk40dspr2izixb25s4rs/tinymce/6/tinymce.min.js"></script>
-                <script>
-                    tinymce.init({
-                        selector: 'textarea.description',
-                        width: 900,
-                        height: 300,
-                    });
-                </script>
+                    <button type="submit" class="btn btn-primary">Add</button>
 
+                </form>
 
                 <hr class="m-4">
                 <h3>Posts</h3>
@@ -134,3 +126,26 @@
     </div>
 
 @endsection
+
+
+
+
+@push('scripts')
+
+    <script src="https://cdn.tiny.cloud/1/au6pwp9jpn18hk2yix49fmqwm0s89fklxsdlguy29ypniqoh/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
+
+    <script>
+        tinymce.init({
+            selector: '#description',
+            plugins: 'ai tinycomments mentions anchor autolink charmap codesample emoticons image link lists media searchreplace table visualblocks wordcount checklist mediaembed casechange export formatpainter pageembed permanentpen footnotes advtemplate advtable advcode editimage tableofcontents mergetags powerpaste tinymcespellchecker autocorrect a11ychecker typography inlinecss',
+            toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table mergetags | align lineheight | tinycomments | checklist numlist bullist indent outdent | emoticons charmap | removeformat',
+            tinycomments_mode: 'embedded',
+            tinycomments_author: 'Author name',
+            mergetags_list: [
+                { value: 'First.Name', title: 'First Name' },
+                { value: 'Email', title: 'Email' },
+            ],
+            ai_request: (request, respondWith) => respondWith.string(() => Promise.reject("See docs to implement AI Assistant")),
+        });
+    </script>
+@endpush

@@ -6,6 +6,7 @@ use App\Enums\ClassworkTypes;
 use App\Models\Classroom;
 use App\Models\Classwork;
 use Illuminate\Contracts\Support\Renderable;
+use Illuminate\Database\Schema\Builder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -24,8 +25,16 @@ class ClassworkController extends Controller
     {
 
         $classworks = $classroom->classworks()
-            ->with('topic')
             ->filter($request->query())
+            ->where(function ($query) {
+                $query->whereHas('users', function ($query) {
+                    $query->where('id', Auth::id());
+                })
+                    ->orWhereHas('classroom.teachers', function ( $query) {
+                        $query->where('id', '=', Auth::id());
+                    });
+
+            })
             ->latest('published_at')
             ->simplePaginate(3)->fragment('classworks');
 
@@ -44,7 +53,8 @@ class ClassworkController extends Controller
      */
     public function create(Request $request, Classroom $classroom): Renderable
     {
-        Gate::authorize('classwork.create',[$classroom]);
+        $this->authorize('create', [Classwork::class, $classroom]);
+
 
         $type = $this->getType($request);
 
@@ -62,6 +72,8 @@ class ClassworkController extends Controller
      */
     public function store(Request $request, Classroom $classroom): RedirectResponse
     {
+        $this->authorize('create', [Classwork::class, $classroom]);
+
         $type = $this->getType($request);
         $request->validate([
             'title' => ['required', 'string', 'max:255'],
@@ -99,12 +111,12 @@ class ClassworkController extends Controller
      */
     public function show(Classroom $classroom, Classwork $classwork): Renderable
     {
-        Gate::authorize('classwork.view',[$classwork]);
+        $this->authorize('view', $classwork);
 
         $comments = $classwork->comments()->get();
-        $submissions=$classwork->submissions()->where('user_id','=',Auth::id())->get();
+        $submissions = $classwork->submissions()->where('user_id', '=', Auth::id())->get();
 
-        return View::make('classworks.show', compact('classroom', 'classwork', 'comments','submissions'));
+        return View::make('classworks.show', compact('classroom', 'classwork', 'comments', 'submissions'));
     }
 
     /**
@@ -112,6 +124,8 @@ class ClassworkController extends Controller
      */
     public function edit(Request $request, Classroom $classroom, Classwork $classwork): Renderable
     {
+        $this->authorize('update', $classwork);
+
         $assigned = $classwork->users()->pluck('id')->toArray();
         $type = $classwork->type->value;
 
@@ -124,6 +138,8 @@ class ClassworkController extends Controller
      */
     public function update(Request $request, Classroom $classroom, Classwork $classwork): RedirectResponse
     {
+        $this->authorize('update', $classwork);
+
 
         $type = $classwork->type;
 
@@ -161,6 +177,8 @@ class ClassworkController extends Controller
      */
     public function destroy(Classroom $classroom, Classwork $classwork): RedirectResponse
     {
+        $this->authorize('delete', $classwork);
+
         $classwork->destroy();
 
         return Redirect::route('classrooms.classworks.index', $classroom->id)

@@ -150,7 +150,6 @@ class Classroom extends Model
 
     }
 
-
     ///  rout to show action
     public function getUrlAttribute()
     {

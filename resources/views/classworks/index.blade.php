@@ -4,7 +4,7 @@
         <h3 class="mb-4">Classworks</h3>
 
 
-        @can('classwork.create',[$classroom])
+        @can('create',[\App\Models\Classwork::class,$classroom])
         <div class="btn-group dropend">
             <button type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown"
                     aria-expanded="false">

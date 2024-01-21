@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\ClassroomRequest;
 use App\Models\Classroom;
+use App\Policies\ClassroomPolicy;
 use Exception;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Database\QueryException;
@@ -22,6 +23,12 @@ use Illuminate\Support\Facades\View;
 class ClassroomsController extends Controller
 {
 
+    public function __construct()
+    {
+        $this->middleware('auth');
+        $this->authorizeResource(Classroom::class,'classroom');
+    }
+
     public function index(Request $request): Renderable
     {
         $classrooms = Classroom::active()
@@ -34,14 +41,13 @@ class ClassroomsController extends Controller
         return View::make('classrooms.index', compact(['classrooms', 'success', 'error']));
     }
 
-    public function show( $id): BaseView
+    public function show( Request $request,Classroom $classroom): BaseView
     {
 
         /// signed Url  dont change ulr by add {signature} and middleware {signed}
         ///  URL::signedRoute()    or URL::temporarySignedRoute('',expire,'')   and expiration time
         ///   used in invitation link  and use in email verification
 
-        $classroom = Classroom::with(['posts.comments.user'])->find($id);
 
         return View::make('classrooms.show')->with([
             'classroom' => $classroom,

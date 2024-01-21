@@ -1,22 +1,22 @@
+<x-main-layout :title="__('Classrooms')">
 
-<x-main-layout title="Classrooms">
+    <div class="container">
+        <h1 class="mb-5"> {{__('Classrooms')}}</h1>
 
-<div class="container">
-    <h1 class="mb-5"> Classrooms</h1>
+        <x-alert name="success" class="alert-success"/>
 
-    <x-alert name="success" class="alert-success" />
+        <x-alert name="error" class="alert-danger"/>
 
-    <x-alert name="error" class="alert-danger" />
 
-    <div class="row">
-        @foreach($classrooms as $classroom)
-            <x-classroom-card :classroom="$classroom" />
-        @endforeach
+        <div class="row">
+            @foreach($classrooms as $classroom)
+                <x-classroom-card :classroom="$classroom"/>
+            @endforeach
+        </div>
+
+
     </div>
-
-
-</div>
-@push('scripts')
-    <script>console.log('@@stack')</script>
-@endpush
+    @push('scripts')
+        <script>console.log('@@stack')</script>
+    @endpush
 </x-main-layout>

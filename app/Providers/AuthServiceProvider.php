@@ -37,54 +37,56 @@ class AuthServiceProvider extends ServiceProvider
 //            }
 //
 //        });
-        Gate::define('classwork.view',function (User $user,Classwork $classwork){
 
-                $isTeacher=$user
-                ->classrooms()
-                ->wherePivot('classroom_id','=',$classwork->classroom_id)
-                ->wherePivot('role','=','teacher')
-                ->exists();
-                $isAssigned=$user
-                    ->classworks()
-                    ->wherePivot('classwork_id','=',$classwork->id)
-                    ->exists();
-                return $isTeacher || $isAssigned;
 
-        });
-        Gate::define('classwork.create',function (User $user,Classroom $classroom){
-            $result= $user
-                ->classrooms()
-                ->withoutGlobalScope(UserClassroomScope::class)
-                ->wherePivot('classroom_id','=',$classroom->id)
-                ->wherePivot('role','=','teacher')
-                ->exists();
-            return $result
-                ?Response::allow()
-                :Response::deny("you aren't a teacher in this classroom");
-
-        });
-        Gate::define('classwork.update',function (User $user,Classwork $classwork){
-            return
-                $classwork->user_id == $user->id
-                &&
-                $user
-                ->classrooms()
-                ->wherePivot('classroom_id','=',$classwork->classroom_id)
-                ->wherePivot('role','=','teacher')
-                ->exists();
-
-        });
-        Gate::define('classwork.delete',function (User $user,Classwork $classwork){
-            return
-                $classwork->user_id == $user->id
-                &&
-                $user
-                ->classrooms()
-                ->wherePivot('classroom_id','=',$classwork->classroom_id)
-                ->wherePivot('role','=','teacher')
-                ->exists();
-
-        });
+//        Gate::define('classwork.view',function (User $user,Classwork $classwork){
+//
+//                $isTeacher=$user
+//                ->classrooms()
+//                ->wherePivot('classroom_id','=',$classwork->classroom_id)
+//                ->wherePivot('role','=','teacher')
+//                ->exists();
+//                $isAssigned=$user
+//                    ->classworks()
+//                    ->wherePivot('classwork_id','=',$classwork->id)
+//                    ->exists();
+//                return $isTeacher || $isAssigned;
+//
+//        });
+//        Gate::define('classwork.create',function (User $user,Classroom $classroom){
+//            $result= $user
+//                ->classrooms()
+//                ->withoutGlobalScope(UserClassroomScope::class)
+//                ->wherePivot('classroom_id','=',$classroom->id)
+//                ->wherePivot('role','=','teacher')
+//                ->exists();
+//            return $result
+//                ?Response::allow()
+//                :Response::deny("you aren't a teacher in this classroom");
+//
+//        });
+//        Gate::define('classwork.update',function (User $user,Classwork $classwork){
+//            return
+//                $classwork->user_id == $user->id
+//                &&
+//                $user
+//                ->classrooms()
+//                ->wherePivot('classroom_id','=',$classwork->classroom_id)
+//                ->wherePivot('role','=','teacher')
+//                ->exists();
+//
+//        });
+//        Gate::define('classwork.delete',function (User $user,Classwork $classwork){
+//            return
+//                $classwork->user_id == $user->id
+//                &&
+//                $user
+//                ->classrooms()
+//                ->wherePivot('classroom_id','=',$classwork->classroom_id)
+//                ->wherePivot('role','=','teacher')
+//                ->exists();
+//
+//        });
 
         Gate::define('submission.create',function (User $user,Classwork $classwork){
 
