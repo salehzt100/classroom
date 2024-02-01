@@ -95,7 +95,8 @@ class AuthServiceProvider extends ServiceProvider
                 ->wherePivot('classroom_id','=',$classwork->classroom_id)
                 ->wherePivot('role','=','teacher')
                 ->exists();
-            if ($isTeacher)
+
+            if ($isTeacher || $classwork->type->value !=='assignment')
             {
                 return false;
             }

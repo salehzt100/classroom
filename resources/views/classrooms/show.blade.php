@@ -23,9 +23,11 @@
 
                 <form action="{{route('posts.store',$classroom->id)}}" method="post">
                     @csrf
-                    <textarea class="description" id="description" name="content"
-                              placeholder="Announce Something To Your Class">
-                </textarea>
+
+                    <x-form.floating-control name="content">
+                        <x-form.input-text name="content" label="Post" id="description"
+                                           placeholder="Add Post..."/>
+                    </x-form.floating-control>
                     <button type="submit" class="btn btn-primary">Add</button>
 
                 </form>
@@ -132,8 +134,7 @@
 
 @push('scripts')
 
-    <script src="https://cdn.tiny.cloud/1/au6pwp9jpn18hk2yix49fmqwm0s89fklxsdlguy29ypniqoh/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
-
+    <!-- Place the following <script> and <textarea> tags your HTML's <body> -->
     <script>
         tinymce.init({
             selector: '#description',
@@ -148,4 +149,5 @@
             ai_request: (request, respondWith) => respondWith.string(() => Promise.reject("See docs to implement AI Assistant")),
         });
     </script>
+
 @endpush

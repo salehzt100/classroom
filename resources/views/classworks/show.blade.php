@@ -8,9 +8,9 @@
         <div class="row">
             <div class="col-md-8">
 
-                <div>
-                    <p class="p-4 bg-light rounded">
-                        {{$classwork->description}}
+                <div class="ps-3">
+                    <p class=" bg-light rounded ">
+                        {!! $classwork->description !!}
                     </p>
                 </div>
                 <h4>Comments</h4>
@@ -79,6 +79,7 @@
             <div class="col-md-4">
 
                 @can('submission.create',[$classwork])
+
                 <div class="bordered rounded p-3 bg-light ">
                     <h4> Submissions </h4>
                     @if($submissions->count())

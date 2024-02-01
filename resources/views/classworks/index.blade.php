@@ -30,7 +30,7 @@
 
 
         <div class="row">
-            <div class="col-md-8">
+            <div class="col-md-10">
                 <div class="shadow my-3 p-3 bg-body rounded shadow-sm border border-gray-400 accordion accordion-flush"
                      id="accordionFlushExample">
 
@@ -64,13 +64,39 @@
                                 <div id="flush-collapse{{$classwork->id}}" class="accordion-collapse collapse"
                                      data-bs-parent="#classworks">
                                     <div class="row p-4">
-                                        <div class="accordion-body col-md-9">{{$classwork->description}}</div>
-                                        <div class="col-md-3 d-flex justify-content-between align-items-start gap-1">
-                                            <a class="btn btn-outline-dark"
-                                               href="{{route('classrooms.classworks.edit',[$classroom->id,$classwork->id])}}" >Update</a>
-                                            <a class="btn btn-outline-success"
-                                               href="{{route('classrooms.classworks.show',[$classroom->id,$classwork->id])}}">View</a>
+                                        <div class="col-md-7">
+                                            <div class="accordion-body ">{!!  $classwork->description!!}</div>
+                                            <div class="p-1 d-flex justify-content-first align-items-start gap-3 ms-3">
+                                                <a class="btn btn-outline-dark"
+                                                   href="{{route('classrooms.classworks.edit',[$classroom->id,$classwork->id])}}" >Update</a>
+                                                <a class="btn btn-outline-success"
+                                                   href="{{route('classrooms.classworks.show',[$classroom->id,$classwork->id])}}">View</a>
+                                            </div>
+
                                         </div>
+                                        <div class="col-md-5 row align-items-center ">
+                                            <div class="col-md-4 text-center">
+
+                                                <div class="fs-6">{{$classwork->assigned_count}}</div>
+                                                <div class="fs-7 text text-muted">Assigned</div>
+
+                                            </div>
+                                            <div class="col-md-4 text-center ">
+
+                                                <div class="fs-6">{{$classwork->turnedin_count}}</div>
+                                                <div class="fs-7 text text-muted">Turned in</div>
+
+                                            </div>
+                                            <div class="col-md-4 text-center ">
+
+
+                                                <div class="fs-6">{{$classwork->graded_count}}</div>
+                                                <div class="fs-7 text text-muted">Graded</div>
+
+                                            </div>
+
+
+                                            </div>
 
                                     </div>
                                 </div>
@@ -99,4 +125,11 @@
 
     </div>
 
+    @push('scripts')
+        <script>
+
+            const classroomId="{{$classroom->id}}";
+
+        </script>
+    @endpush
 </x-main-layout>

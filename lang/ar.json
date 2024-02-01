@@ -1,4 +1,6 @@
 {
+
+    ":name posted a new :type : :title": "قام :name بنشر :type جديد : :title",
     "Classrooms": "الصفوف",
     "(and :count more error)": "(و :count خطأ إضافي)",
     "(and :count more errors)": "(و :count أخطاء إضافية)",

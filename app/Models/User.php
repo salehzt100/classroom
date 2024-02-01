@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Contracts\Translation\HasLocalePreference;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -10,9 +11,10 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Notifications\Notification;
 use Laravel\Sanctum\HasApiTokens;
 
-class User extends Authenticatable implements MustVerifyEmail
+class User extends Authenticatable implements MustVerifyEmail ,HasLocalePreference
 {
     use HasApiTokens, HasFactory, Notifiable;
 
@@ -96,5 +98,31 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $this->hasMany(Submission::class);
     }
+    public function routeNotificationForMail(Notification $notification):string
+    {
+
+        return $this->email;
+    }
+    public function routeNotificationForVonage(Notification $notification):string
+    {
+
+        return '972569830744';
+    }
+    public function routeNotificationForHadara(Notification $notification):string
+    {
+
+        return '972569522815';
+    }
+    public function preferredLocale()
+    {
+
+        return $this->profile->locale;
+    }
+
+    public function receivesBroadcastNotificationsOn(): string
+    {
+        return 'Notifications.'.$this->id;
+    }
+
 
 }

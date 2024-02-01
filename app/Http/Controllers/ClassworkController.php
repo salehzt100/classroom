@@ -3,15 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Enums\ClassworkTypes;
+use App\Events\ClassworkCreated;
 use App\Models\Classroom;
 use App\Models\Classwork;
 use Illuminate\Contracts\Support\Renderable;
-use Illuminate\Database\Schema\Builder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\View;
 use Illuminate\Validation\Rule;
@@ -26,11 +25,17 @@ class ClassworkController extends Controller
 
         $classworks = $classroom->classworks()
             ->filter($request->query())
+            ->withCount([
+                'users as assigned_count' => fn($query) => $query->where('classwork_user.status', '=', 'assigned'),
+                'users as turnedin_count' => fn($query) => $query->where('classwork_user.status', '=', 'submitted'),
+                'users as graded_count' => fn($query) => $query->where('classwork_user.status', '=', 'graded'),
+
+            ])
             ->where(function ($query) {
                 $query->whereHas('users', function ($query) {
                     $query->where('id', Auth::id());
                 })
-                    ->orWhereHas('classroom.teachers', function ( $query) {
+                    ->orWhereHas('classroom.teachers', function ($query) {
                         $query->where('id', '=', Auth::id());
                     });
 
@@ -99,6 +104,9 @@ class ClassworkController extends Controller
 
             $classwork->users()->attach($request->students);
 
+            event(new ClassworkCreated($classwork));
+            //ClassworkCreated::dispatch($classwork);
+
         });
 
 
@@ -162,6 +170,7 @@ class ClassworkController extends Controller
             $classwork->update(request()->all());
 
             $classwork->users()->sync($request->input('students'));
+
 
         });
 

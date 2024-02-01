@@ -68,6 +68,11 @@ class Classroom extends Model
 
         )->withPivot(['role','created_at']);
     }
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
 
     public function students()
     {
@@ -92,6 +97,10 @@ class Classroom extends Model
         return $this->hasMany(Post::class,'classroom_id');
     }
 
+    public function streams() :HasMany
+    {
+        return $this->hasMany(Stream::class,'classroom_id','id');
+    }
     public static function deleteCoverImage($path)
     {
         if ($path && Storage::disk(static::$disk)->exists($path)) {
@@ -140,11 +149,18 @@ class Classroom extends Model
     {
         return ucwords($value);
     }
+    protected $appends =[
+        'cover_image_url'
+    ];
+    protected $hidden=[
+        'deleted_at',
+        'cover_image_path'
+    ];
 
     public function getCoverImageUrlAttribute()
     {
         if ($this->cover_image_path) {
-            return asset('storage/' . $this->cover_image_path);
+            return  Storage::disk(static::$disk)->url($this->cover_image_path);
         }
         return 'https://placehold.co/600x165/033E3E/@2x.png?text=' . $this->name;
 

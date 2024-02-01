@@ -3,9 +3,11 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Place the first <script> tag in your HTML's <head> -->
+
     <title>{{$title}}</title>
 
-    @if(App::isLocal('ar'))
+    @if(App::isLocale('ar'))
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.rtl.min.css" integrity="sha384-nU14brUcp6StFntEOOEBvcJm4huWjB0OcIeQ3fltAfSmuZFrkAif0T+UtNGlKKQv" crossorigin="anonymous">
 
     @else
@@ -13,30 +15,19 @@
               integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
 
     @endif
-    <x-head.tinymce-config/>
-{{--    <script src="https://cdn.tiny.cloud/1/ypd4cvvgeu7d0tb1xnaimv4xwd08nk40dspr2izixb25s4rs/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>--}}
+    <script src="https://cdn.tiny.cloud/1/au6pwp9jpn18hk2yix49fmqwm0s89fklxsdlguy29ypniqoh/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
+
+
     @stack('styles')
     <style>
-        body {
-            min-height: 100vh;
-            position: relative;
-            margin: 0;
-            padding-bottom: 70px;
-            box-sizing: border-box;
-        }
-        footer {
-            position: absolute;
-            bottom: 0;
-            height: 70px;
-            width: 100%;
 
-        }
     </style>
 </head>
 <body class="d-flex flex-column  min-vh-100">
 
 <header class="mb-5">
     <nav class="navbar navbar-expand-lg bg-body-tertiary" data-bs-theme="dark">
+
 
         <div class="container">
             <a class="navbar-brand" href="{{route('home')}}">{{config('app.name','Laravel')}}</a>
@@ -48,11 +39,12 @@
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="#">Home</a>
+                        <a class="nav-link active" aria-current="page" href="{{route('classrooms.index')}}">Home</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="#">Link</a>
                     </li>
+
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
                            aria-expanded="false">
@@ -67,9 +59,10 @@
                             <li><a class="dropdown-item" href="#">Something else here</a></li>
                         </ul>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link disabled" aria-disabled="true">Disabled</a>
-                    </li>
+
+                   <x-user-notifications-menu />
+
+
                 </ul>
                 <div class="text text-success m-2">
                     {{Auth::user()?->name}}
@@ -85,29 +78,27 @@
 <main class="min-vh-120">
     {{$slot}}
 </main>
-<footer class="container d-flex flex-wrap justify-content-start align-items-center py-3 my-4 border-top  ">
-    <p class="col-md-12 mb-0 text-muted text-center">© 2024 {{ config('app.name') }} | Developed by Saleh Zetawi</p>
+<footer class="d-flex flex-wrap justify-content-center align-items-center py-3 my-4 border-top mt-4 ">
+    <span class="mb-3 mb-md-0 text-body-secondary text-center">© 2024 {{ config('app.name') }} | Developed by Saleh Zetawi</span>
 
-{{--    <a href="/"--}}
-{{--       class="col-md-4 d-flex align-items-center justify-content-center mb-3 mb-md-0 me-md-auto link-dark text-decoration-none">--}}
-{{--        <svg class="bi me-2" width="40" height="32">--}}
-{{--            <use xlink:href="#bootstrap"></use>--}}
-{{--        </svg>--}}
-{{--    </a>--}}
+    {{--    <div class="col-md-12 d-flex align-items-center ">--}}
+    {{--    </div>--}}
 
-{{--    <ul class="nav col-md-4 justify-content-end">--}}
-{{--        <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">Home</a></li>--}}
-{{--        <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">Features</a></li>--}}
-{{--        <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">Pricing</a></li>--}}
-{{--        <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">FAQs</a></li>--}}
-{{--        <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">About</a></li>--}}
-{{--    </ul>
---}}
+    {{--    <ul class="nav col-md-4 justify-content-end list-unstyled d-flex">--}}
+    {{--        <li class="ms-3"><a class="text-body-secondary" href="#"><svg class="bi" width="24" height="24"><use xlink:href="#twitter"></use></svg></a></li>--}}
+    {{--        <li class="ms-3"><a class="text-body-secondary" href="#"><svg class="bi" width="24" height="24"><use xlink:href="#instagram"></use></svg></a></li>--}}
+    {{--        <li class="ms-3"><a class="text-body-secondary" href="#"><svg class="bi" width="24" height="24"><use xlink:href="#facebook"></use></svg></a></li>--}}
+    {{--    </ul>--}}
 </footer>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
         crossorigin="anonymous"></script>
 
 @stack('scripts')
+<script>
+    const userId = {{Auth::id()}};
+</script>
+@vite(['resources/js/app.js'])
+
 </body>
 </html>

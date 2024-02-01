@@ -13,4 +13,9 @@ class Profile extends Model
     {
         $this->belongsTo(User::class);
     }
+
+    protected $casts=
+        [
+          'birthday'=>'date'
+        ];
 }
