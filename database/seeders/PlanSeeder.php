@@ -23,15 +23,20 @@ class PlanSeeder extends Seeder
             ->insert([
                 [
                     'name' => 'Free Plan',
-                    'price' => 0
+                    'price' => 0,
+                    'feature'=>0
+
                 ],
                 [
                     'name' => 'Basic Plan',
-                    'price' => 2000
+                    'price' => 2000,
+                    'feature'=>1
                 ],
                 [
                     'name' => 'Pro Plan',
-                    'price' => 8000
+                    'price' => 8000,
+                    'feature'=>0
+
                 ],
 
             ]);

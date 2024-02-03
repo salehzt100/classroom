@@ -5,9 +5,11 @@ use App\Http\Controllers\ClassroomsController;
 use App\Http\Controllers\ClassworkController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\JoinClassroomController;
+use App\Http\Controllers\PlanController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SubmissionController;
+use App\Http\Controllers\SubscriptionController;
 use App\Http\Controllers\TopicsController;
 use App\Models\Submission;
 use Illuminate\Support\Facades\Route;
@@ -95,6 +97,11 @@ Route::middleware(['auth'])->group(function () {
     Route::get('submissions/{submission}/file',[SubmissionController::class,'file'])
         ->name('submissions.file');
 
-});
 
+
+    Route::post('subscriptions',[SubscriptionController::class,'store'])->name('subscriptions.store');
+
+    Route::get('plans',[PlanController::class,'index']);
+
+});
 

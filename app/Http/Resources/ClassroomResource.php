@@ -17,17 +17,21 @@ class ClassroomResource extends JsonResource
 
 //        self::withoutWrapping();
         self::wrap('classroom');
+
         return [
+            'id'=>$this->id,
             'name'=>$this->name,
             'code'=>$this->code,
+            'cover_image'=>$this->cover_image_url,
             'meta'=>[
                 'section'=>$this->section,
                 'room'=>$this->room,
                 'subject'=>$this->subject,
-                'students_count'=>$this->students_count
+                'students_count'=>$this->students_count,
+                'theme'=>$this->theme
             ],
             'user'=>[
-                'name'=>'kk'
+                'name'=>$this->user?->name
             ]
         ];
     }

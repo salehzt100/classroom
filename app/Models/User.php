@@ -50,6 +50,10 @@ class User extends Authenticatable implements MustVerifyEmail ,HasLocalePreferen
     ];
 
 
+    public function subscriptions() :HasMany
+    {
+        return $this->hasMany(Subscription::class);
+    }
 
 
     public function classrooms() :BelongsToMany
@@ -123,6 +127,7 @@ class User extends Authenticatable implements MustVerifyEmail ,HasLocalePreferen
     {
         return 'Notifications.'.$this->id;
     }
+
 
 
 }
