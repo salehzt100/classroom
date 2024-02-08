@@ -5,12 +5,15 @@ use App\Http\Controllers\ClassroomsController;
 use App\Http\Controllers\ClassworkController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\JoinClassroomController;
+use App\Http\Controllers\LanguageSelectorsController;
+use App\Http\Controllers\PaymentsController;
 use App\Http\Controllers\PlanController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SubmissionController;
 use App\Http\Controllers\SubscriptionController;
 use App\Http\Controllers\TopicsController;
+use App\Http\Controllers\Webhooks\StripeController;
 use App\Models\Submission;
 use Illuminate\Support\Facades\Route;
 
@@ -99,9 +102,25 @@ Route::middleware(['auth'])->group(function () {
 
 
 
-    Route::post('subscriptions',[SubscriptionController::class,'store'])->name('subscriptions.store');
+    Route::post('subscriptions',[SubscriptionController::class,'store'])
+        ->name('subscriptions.store');
 
+    Route::post('payments',[PaymentsController::class,'store'])
+        ->name('payments.store');
+    Route::get('payments/{subscription}/success',[PaymentsController::class,'success'])
+        ->name('payments.success');
+    Route::get('payments/{subscription}/cancel',[PaymentsController::class,'cancel'])
+        ->name('payments.cancel');
     Route::get('plans',[PlanController::class,'index']);
 
+    Route::get('subscriptions/{subscription}/pay',[PaymentsController::class,'create'])
+        ->name('checkout');
+
+
 });
+
+Route::post('language/change',LanguageSelectorsController::class)->name('locale');
+
+Route::post('/payments/stripe/webhook',StripeController::class);
+
 

@@ -165,6 +165,20 @@ class Classroom extends Model
         return 'https://placehold.co/600x165/033E3E/@2x.png?text=' . $this->name;
 
     }
+    public function scopeFilter(Builder $builder, $filters)
+    {
+
+        $builder->when($filters['search'] ?? '', function ($builder, $value) {
+            $builder->where(function ($builder) use ($value) {
+                $builder->where('name', 'LIKE', "%{$value}%")
+                    ->orWhere('section', 'LIKE', "%{$value}%");
+            });
+
+        })
+       ;
+
+    }
+
 
     ///  rout to show action
     public function getUrlAttribute()

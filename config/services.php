@@ -33,5 +33,10 @@ return [
 
     'hadara'=>[
         'key'=> env('HADARA_KEY')
+    ],
+
+    'stripe'=>[
+        'publish_key'=>env('STRIPE_PUBLISH_KEY'),
+        'secret_key'=>env('STRIPE_SECRET_KEY'),
     ]
 ];

@@ -19,3 +19,4 @@ class EnsureUserHasActiveSubscription
         return $next($request);
     }
 }
+

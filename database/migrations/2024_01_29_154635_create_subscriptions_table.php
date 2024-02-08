@@ -17,6 +17,8 @@ return new class extends Migration
             $table->foreignId('user_id')->nullable()->constrained()->nullOnDelete();
             $table->integer('price');
             $table->date('expired_at')->nullable();
+            $table->enum('status',['pending','active','expired']);
+            $table->tinyInteger('period')->default(1);
             $table->timestamps();
         });
     }

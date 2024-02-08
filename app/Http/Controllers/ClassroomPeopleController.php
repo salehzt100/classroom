@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Actions\Classroom\ClassroomPeopleDestroy;
+use App\Http\Requests\Classroom\ClassroomPeopleDestroyRequest;
 use App\Models\Classroom;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
@@ -9,28 +11,22 @@ use Illuminate\Support\Facades\View;
 
 class ClassroomPeopleController extends Controller
 {
-    public function index(Classroom $classroom):Renderable
+    public function index(Classroom $classroom): Renderable
     {
 
-        return View::make('classrooms.people',compact('classroom'));
+        return View::make('classrooms.people', compact('classroom'));
     }
 
-    public function destroy(Request $request,Classroom $classroom)
+    public function destroy(ClassroomPeopleDestroyRequest $request, ClassroomPeopleDestroy $destroy, Classroom $classroom)
     {
-        $request->validate([
-            'user_id'=>'required'
-        ]);
-        $user_id=$request->input('user_id');
-        if ($user_id== $classroom->user_id){
-            return redirect()
-                ->route('classrooms.people',$classroom->id)
-                ->with('error','Cant remove user!');
-        }
-        $classroom->users()->detach($request->input('user_id'));
+
+        $user_id = $request->input('user_id');
+
+        $destroy($user_id, $classroom);
 
         return redirect()
-            ->route('classrooms.people',$classroom->id)
-            ->with('success','user removed!');
+            ->route('classrooms.people', $classroom->id)
+            ->with('success', 'user removed!');
     }
 
 }
