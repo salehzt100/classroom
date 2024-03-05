@@ -2,7 +2,9 @@
 
 namespace App\Providers;
 
+use App\Models\Classroom;
 use App\Models\Classwork;
+use App\Models\Message;
 use App\Models\Post;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Relations\Relation;
@@ -31,6 +33,7 @@ class AppServiceProvider extends ServiceProvider
           'classwork'  =>Classwork::class,
             'post' =>Post::class,
             'user'=>User::class,
+            'classroom'=>Classroom::class,
         ]);
     }
 }

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Auth\TwoFactorAuthenticationController;
 use App\Http\Controllers\ClassroomPeopleController;
 use App\Http\Controllers\ClassroomsController;
 use App\Http\Controllers\ClassworkController;
@@ -14,7 +15,6 @@ use App\Http\Controllers\SubmissionController;
 use App\Http\Controllers\SubscriptionController;
 use App\Http\Controllers\TopicsController;
 use App\Http\Controllers\Webhooks\StripeController;
-use App\Models\Submission;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -42,7 +42,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-require __DIR__ . '/auth.php';
+//require __DIR__ . '/auth.php';
 
 //Route::get('classrooms/create', [ClassroomsController::class, 'create'])->name('classrooms.create');
 //Route::post('/classrooms', [ClassroomsController::class, 'store'])->name('classrooms.store');
@@ -111,10 +111,16 @@ Route::middleware(['auth'])->group(function () {
         ->name('payments.success');
     Route::get('payments/{subscription}/cancel',[PaymentsController::class,'cancel'])
         ->name('payments.cancel');
-    Route::get('plans',[PlanController::class,'index']);
+    Route::get('plans',[PlanController::class,'index'])->name('plans');
 
     Route::get('subscriptions/{subscription}/pay',[PaymentsController::class,'create'])
         ->name('checkout');
+
+
+    Route::get('2fa',[TwoFactorAuthenticationController::class,'create']);
+
+    Route::get('classrooms/{classroom}/chat',[ClassroomsController::class,'chat'])
+        ->name('classrooms.chat');
 
 
 });

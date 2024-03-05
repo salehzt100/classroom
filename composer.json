@@ -10,6 +10,8 @@
         "guzzlehttp/guzzle": "^7.8",
         "itsgoingd/clockwork": "^5.1",
         "laravel-lang/locales": "^2.5",
+        "laravel-notification-channels/fcm": "^4.1",
+        "laravel/fortify": "^1.20",
         "laravel/framework": "^10.10",
         "laravel/sanctum": "^3.3",
         "laravel/tinker": "^2.8",

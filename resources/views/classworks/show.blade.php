@@ -7,7 +7,6 @@
         <hr>
         <div class="row">
             <div class="col-md-8">
-
                 <div class="ps-3">
                     <p class=" bg-light rounded ">
                         {!! $classwork->description !!}
@@ -77,7 +76,6 @@
 
             </div>
             <div class="col-md-4">
-
                 @can('submission.create',[$classwork])
 
                 <div class="bordered rounded p-3 bg-light ">
@@ -96,8 +94,7 @@
 
 
                         </div>
-
-                    @else
+                 @else
                         <form action="{{ route('submissions.store', $classwork->id) }}" method="post"
                               class="d-flex flex-column align-items-start mt-3" enctype="multipart/form-data">
                             @csrf

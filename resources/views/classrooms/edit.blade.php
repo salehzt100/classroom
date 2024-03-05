@@ -13,6 +13,15 @@
                      [
                         'button_label'=>'Update Classroom'
                      ])
+
     </form>
+    <script src="https://unpkg.com/filepond@^4/dist/filepond.js"></script>
+    <script>
+        // Get a reference to the file input element
+        const inputElement = document.querySelector('input[type="file"]');
+
+        // Create a FilePond instance
+        const pond = FilePond.create(inputElement);
+    </script>
 </div>
 @endsection

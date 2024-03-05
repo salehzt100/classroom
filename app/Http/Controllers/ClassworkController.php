@@ -2,24 +2,22 @@
 
 namespace App\Http\Controllers;
 
+use App\Actions\classwork\GetComments;
+use App\Actions\classwork\GetSubmissions;
 use App\Enums\ClassworkTypes;
-use App\Events\ClassworkCreated;
 use App\Models\Classroom;
 use App\Models\Classwork;
+use App\Services\ClassworkServices;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\View;
-use Illuminate\Validation\Rule;
 
 class ClassworkController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+
     public function index(Request $request, Classroom $classroom): Renderable
     {
 
@@ -53,9 +51,7 @@ class ClassworkController extends Controller
         ]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
+
     public function create(Request $request, Classroom $classroom): Renderable
     {
         $this->authorize('create', [Classwork::class, $classroom]);
@@ -72,64 +68,29 @@ class ClassworkController extends Controller
         return View::make('classworks.create', compact('classroom', 'classwork', "topics", 'type'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request, Classroom $classroom): RedirectResponse
+
+    public function store(Request $request,ClassworkServices $classwork_handlers ,Classroom $classroom): RedirectResponse
     {
         $this->authorize('create', [Classwork::class, $classroom]);
 
         $type = $this->getType($request);
-        $request->validate([
-            'title' => ['required', 'string', 'max:255'],
-            'description' => ['nullable', 'string'],
-            'topic_id' => ['nullable', 'integer', 'exists:topics,id'],
-            'options_grade' => [Rule::requiredIf(fn() => $type == Classwork::TYPE_ASSIGNMENT), 'numeric', 'min:0'],
-            'options_due' => ['nullable', 'date', 'after:published_at']
-        ]);
 
-        $request->merge([
-            'options' => $request->input('options')
-        ]);
-        $request->merge([
-            'user_id' => Auth::id(),
-            'type' => $type,
-        ]);
-
-
-        DB::transaction(function () use ($request, $classroom) {
-
-            $classwork = $classroom->classworks()->create(request()->all());
-
-
-            $classwork->users()->attach($request->students);
-
-            event(new ClassworkCreated($classwork));
-            //ClassworkCreated::dispatch($classwork);
-
-        });
-
+        $classwork_handlers->store($request,$classroom,$type);
 
         return redirect()->route('classrooms.classworks.index', $classroom->id)
             ->with('success', 'Classwork Created!');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Classroom $classroom, Classwork $classwork): Renderable
+    public function show(GetSubmissions $getSubmissions,GetComments $getComments,Classroom $classroom, Classwork $classwork): Renderable
     {
         $this->authorize('view', $classwork);
-
-        $comments = $classwork->comments()->get();
-        $submissions = $classwork->submissions()->where('user_id', '=', Auth::id())->get();
+        $submissions=$getSubmissions($classwork);
+        $comments=$getComments($classwork);
 
         return View::make('classworks.show', compact('classroom', 'classwork', 'comments', 'submissions'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
+
     public function edit(Request $request, Classroom $classroom, Classwork $classwork): Renderable
     {
         $this->authorize('update', $classwork);
@@ -141,39 +102,12 @@ class ClassworkController extends Controller
         return View::make('classworks.edit', compact('classroom', 'classwork', 'type', 'assigned'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Classroom $classroom, Classwork $classwork): RedirectResponse
+
+    public function update(Request $request,ClassworkServices $classwork_handlers, Classroom $classroom, Classwork $classwork): RedirectResponse
     {
         $this->authorize('update', $classwork);
 
-
-        $type = $classwork->type;
-
-
-        $request->validate([
-            'title' => ['required', 'string', 'max:255'],
-            'description' => ['nullable', 'string'],
-            'topic_id' => ['nullable', 'integer', 'exists:topics,id'],
-            'options.grade' => [Rule::requiredIf(fn() => $type == Classwork::TYPE_ASSIGNMENT), 'numeric', 'min:0'],
-            'options.due' => ['nullable', 'date', 'after:published_at']
-        ]);
-
-        $request->merge([
-            'options' => $request->input('options')
-        ]);
-
-
-        DB::transaction(function () use ($request, $classwork) {
-
-            $classwork->update(request()->all());
-
-            $classwork->users()->sync($request->input('students'));
-
-
-        });
-
+        $classwork_handlers->update($request,$classroom,$classwork);
 
         return Redirect::route('classrooms.classworks.show', [$classroom->id, $classwork->id])->with([
             'success' => 'classwork updated!',
@@ -181,9 +115,7 @@ class ClassworkController extends Controller
 
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
+
     public function destroy(Classroom $classroom, Classwork $classwork): RedirectResponse
     {
         $this->authorize('delete', $classwork);

@@ -25,6 +25,10 @@ class StripePayment
                     'unit_amount' => $subscription->plan->price * 100,
                 ],
                 'quantity' => $subscription->period,
+//                'adjustable_quantity'=>[
+//                    'enabled'=>true,
+//                    'maximum'=>12,
+//                ],
             ]],
             'metadata' => [
                 'client_reference_id' => Auth::id(),

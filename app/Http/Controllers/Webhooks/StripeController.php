@@ -14,6 +14,7 @@ class StripeController extends Controller
     public function __invoke(Request $request, StripeClient $stripe)
     {
 
+        //stripe listen --forward-to localhost:8000/payments/stripe/webhook
 // webhook.php
 //
 // Use this sample code to handle webhook events in your integration.
@@ -50,22 +51,42 @@ class StripeController extends Controller
 
             case 'checkout.session.completed':
                 $session = $event->data->object;
-                Payment::where('gateway_reference_id', '=', $session->id)->update([
-                    'gateway_reference_id' => $session->payment_intent,
-                ]);
+
+                if ($session->amount_total === 0){
+
+                    $payment = Payment::where('gateway_reference_id', $session->id)->first();
+                    $payment->forceFill([
+                        'status' => 'completed'
+                    ])->save();
+
+
+                    $subscription = Subscription::where('id', '=', $payment->subscription_id)->first();
+                    $subscription->update([
+                        'status' => 'active',
+                        'expired_at' => now()->addMonths($subscription->period),
+                    ]);
+                }else{
+
+                    Payment::where('gateway_reference_id', '=', $session->id)->update([
+                        'gateway_reference_id' => $session->payment_intent,
+                    ]);
+                }
+
                 break;
+//            case 'checkout.session.async_payment_failed':
+
             case 'checkout.session.expired':
                 $session = $event->data->object;
                 break;
-            case 'payment_intent.canceled':
-
-                $paymentIntent = $event->data->object;
-
-                $payment = Payment::where('gateway_reference_id', $paymentIntent->id)->first()->delete();
-
-                 Subscription::where('id', '=', $payment->subscription_id)->delete();
-
-                break;
+//            case 'payment_intent.canceled':
+//
+//                $paymentIntent = $event->data->object;
+//
+//                $payment = Payment::where('gateway_reference_id', $paymentIntent->id)->first()->delete();
+//
+//                Subscription::where('id', '=', $payment->subscription_id)->delete();
+//
+//                break;
             case 'payment_intent.created':
                 $paymentIntent = $event->data->object;
                 break;

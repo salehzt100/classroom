@@ -3,7 +3,6 @@
         <h1 class="mb-3"> {{$classroom->name}}</h1>
         <h3 class="mb-4">Classworks</h3>
 
-
         @can('create',[\App\Models\Classwork::class,$classroom])
         <div class="btn-group dropend">
             <button type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown"
@@ -78,20 +77,20 @@
                                             <div class="col-md-4 text-center">
 
                                                 <div class="fs-6">{{$classwork->assigned_count}}</div>
-                                                <div class="fs-7 text text-muted">Assigned</div>
+                                                <div class="fs-7  text-muted">Assigned</div>
 
                                             </div>
-                                            <div class="col-md-4 text-center ">
+                                            <div class="col-md-4 text-center  ">
 
-                                                <div class="fs-6">{{$classwork->turnedin_count}}</div>
-                                                <div class="fs-7 text text-muted">Turned in</div>
+                                                <div class="fs-6 ">{{$classwork->turnedin_count}}</div>
+                                                <div class="fs-7  text-muted ">Turned in</div>
 
                                             </div>
                                             <div class="col-md-4 text-center ">
 
 
                                                 <div class="fs-6">{{$classwork->graded_count}}</div>
-                                                <div class="fs-7 text text-muted">Graded</div>
+                                                <div class="fs-7  text-muted">Graded</div>
 
                                             </div>
 

@@ -2,24 +2,24 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Classroom;
-use App\Models\Scopes\UserClassroomScope;
+use App\Actions\Classroom\CheckUserIsExistInClassroom;
+use App\Actions\Classroom\GetClassroomWithoutGlobalScope;
+use App\Actions\Classroom\JoinClassroom;
+use App\Http\Requests\JoinRequest;
 use Exception;
-use Illuminate\Http\Request;
+use Illuminate\Contracts\Support\Renderable;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
 
 class JoinClassroomController extends Controller
 {
-    public function create($id)
+    public function create(GetClassroomWithoutGlobalScope $get_classroom, CheckUserIsExistInClassroom $exists, string $id):Renderable | RedirectResponse
     {
 
-        $classroom = Classroom::withoutGlobalScope(UserClassroomScope::class)
-            ->active()
-            ->findOrFail($id);
+        $classroom = $get_classroom($id);
 
         try {
-            $this->exists($classroom, Auth::id());
+            $exists( $classroom, Auth::id());
 
         } catch (Exception $e) {
             return redirect()->route('classrooms.show', $id);
@@ -27,41 +27,22 @@ class JoinClassroomController extends Controller
         return view('classrooms.join', compact('classroom'));
     }
 
-    public function store(Request $request, $id)
+    public function store(JoinRequest $request, GetClassroomWithoutGlobalScope $get_classroom,JoinClassroom $join,string $id) :RedirectResponse
     {
-        $request->validate([
-            'role' => 'in:student,teacher'
-        ]);
 
-        $classroom = Classroom::withoutGlobalScope(UserClassroomScope::class)
-            ->active()
-            ->findOrFail($id);
+        $classroom = $get_classroom($id);
 
         try {
 
-            $classroom->join(Auth::id(), $request->input('role', 'student'));
+            $join($request,$classroom);
 
         } catch (\Exception $e) {
             return redirect()->route('classrooms.show', $id);
         }
-
 
         return redirect()->route('classrooms.show', $id);
 
     }
 
 
-    protected function exists(Classroom $classroom, $user_id)
-    {
-
-        $exists = $classroom->users()
-            ->where('id', '=', $user_id)
-            ->exists();
-
-        if ($exists) {
-            throw new \Exception('this user joined in this classroom');
-        }
-
-        return true;
-    }
 }

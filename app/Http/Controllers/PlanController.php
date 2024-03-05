@@ -10,7 +10,8 @@ class PlanController extends Controller
 {
     public function index()
     {
-        $plans=Plan::all();
-        return View::make('plans',compact('plans'));
+        $plans = Plan::all();
+
+        return View::make('plans', compact('plans'));
     }
 }

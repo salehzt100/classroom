@@ -20,3 +20,13 @@ Broadcast::channel('Notifications.{id}', function ($user, $id) {
 Broadcast::channel('classroom.{id}',function ($user ,$id){
     return $user->classrooms()->where('id','=',$id)->exists();
 });
+
+Broadcast::channel('classroom.message.{id}',function ($user ,$id){
+
+    if ($user->classrooms()->where('id','=',$id)->exists())
+    {
+        return $user;
+
+    }
+
+});

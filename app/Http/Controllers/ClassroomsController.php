@@ -108,5 +108,10 @@ class ClassroomsController extends Controller
 
     }
 
+    public function chat(Classroom $classroom)
+    {
+        return View::make('classrooms.chat',compact('classroom'));
+    }
+
 
 }

@@ -25,7 +25,7 @@
                     @csrf
 
                     <x-form.floating-control name="content">
-                        <x-form.input-text name="content" label="Post" id="description"
+                        <x-form.input-text name="content" label="Post" id="editor1"
                                            placeholder="Add Post..."/>
                     </x-form.floating-control>
                     <button type="submit" class="btn btn-primary">Add</button>
@@ -136,6 +136,16 @@
 
     <!-- Place the following <script> and <textarea> tags your HTML's <body> -->
     <script>
+        $(document).ready(function() {
+
+            CKEDITOR.replace('editor1', {
+                language: 'en'
+            });
+            CKEDITOR.replace('editor2', {
+                language: 'en'
+            });
+        });
+/*
         tinymce.init({
             selector: '#description',
             plugins: 'ai tinycomments mentions anchor autolink charmap codesample emoticons image link lists media searchreplace table visualblocks wordcount checklist mediaembed casechange export formatpainter pageembed permanentpen footnotes advtemplate advtable advcode editimage tableofcontents mergetags powerpaste tinymcespellchecker autocorrect a11ychecker typography inlinecss',
@@ -148,6 +158,7 @@
             ],
             ai_request: (request, respondWith) => respondWith.string(() => Promise.reject("See docs to implement AI Assistant")),
         });
+*/
     </script>
 
 @endpush

@@ -16,7 +16,9 @@ class UserNotificationsMenu extends Component
     public $notifications;
     public function __construct($count=10)
     {
+
          $user=Auth::user();
+
         $this->notifications=$user->notifications()
             ->take($count)
             ->get();

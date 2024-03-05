@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
@@ -11,11 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('classrooms', function (Blueprint $table) {
-        //  $table->timestamp('deleted_at')->nullable();
+        Schema::table('classrooms', function ($table) {
             $table->softDeletes()->after('status');
-            $table->enum('status',['active','archived','deleted'])->change();
         });
+
+        DB::statement('ALTER TABLE classrooms MODIFY status ENUM("active", "archived", "deleted") DEFAULT "active"');
     }
 
     /**
@@ -23,11 +23,10 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('classrooms', function (Blueprint $table) {
-           // $table->dropColumn('deleted_at');
+        Schema::table('classrooms', function ($table) {
             $table->dropSoftDeletes();
-            $table->enum('status',['active','archived'])->change();
-
         });
+
+        DB::statement('ALTER TABLE classrooms MODIFY status ENUM("active", "archived") DEFAULT "active"');
     }
 };

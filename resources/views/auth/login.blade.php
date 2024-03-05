@@ -7,9 +7,18 @@
 
         <!-- Email Address -->
         <div>
-            <x-input-label for="email" :value="__('Email')" />
-            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autofocus autocomplete="username" />
-            <x-input-error :messages="$errors->get('email')" class="mt-2" />
+            <x-input-label for="{{config('fortify.username')}}" :value="__(config('fortify.username'))" />
+            <x-text-input
+                id="{{ config('fortify.username') }}"
+                class="block mt-1 w-full"
+                type="text"
+                name="{{ config('fortify.username') }}"
+                :value="old(config('fortify.username'))"
+                required
+                autofocus
+                autocomplete="{{ config('fortify.username') }}"
+            />
+            <x-input-error :messages="$errors->get(config('fortify.username'))" class="mt-2" />
         </div>
 
         <!-- Password -->
@@ -39,9 +48,9 @@
                 </a>
             @endif
 
-            <x-primary-button class="ms-3">
-                {{ __('Log in') }}
-            </x-primary-button>
+                <x-primary-button class="ms-3">
+                    {{ __('Log in') }}
+                </x-primary-button>
         </div>
     </form>
 </x-guest-layout>

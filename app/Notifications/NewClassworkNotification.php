@@ -11,6 +11,9 @@ use Illuminate\Notifications\Messages\DatabaseMessage;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Messages\VonageMessage;
 use Illuminate\Notifications\Notification;
+use NotificationChannels\Fcm\FcmChannel;
+use NotificationChannels\Fcm\FcmMessage;
+use NotificationChannels\Fcm\Resources\Notification as FcmNotification;
 
 class NewClassworkNotification extends Notification
 {
@@ -36,9 +39,10 @@ class NewClassworkNotification extends Notification
         $via = [
             'database',
             'mail',
-            'broadcast',
+            FcmChannel::class,
+//            'broadcast',
 //            'vonage',
-            HadaraSmsChannel::class
+//            HadaraSmsChannel::class
         ];
 
 //        if ($notifiable->receive_mail_notifications) {
@@ -76,6 +80,37 @@ class NewClassworkNotification extends Notification
             ->action(__('Go To Classwork'), route('classrooms.classworks.show', [$classwork->classroom_id, $classwork->id]))
             ->line('Thank you for using our application!');
 
+    }
+    public function toFcm($notifiable): FcmMessage
+    {
+        $classwork = $this->classwork;
+        $content = __(':name posted a new :type : :title', [
+            'name' => $classwork->user->name,
+            'type' => __($classwork->type->value),
+            'title' => $classwork->title
+        ]);
+
+        return (new FcmMessage(notification: new FcmNotification(
+            title: 'New Classwork',
+            body: $content,
+/*            image: 'http://example.com/url-to-image-here.png'*/
+        )))
+            ->data(['classwork_id' => "{$classwork->id}", 'user_id' => "{$classwork->user_id}"])
+            ->custom([
+                'android' => [
+                    'notification' => [
+                        'color' => '#0A0A0A',
+                    ],
+                    'fcm_options' => [
+                        'analytics_label' => 'analytics',
+                    ],
+                ],
+                'apns' => [
+                    'fcm_options' => [
+                        'analytics_label' => 'analytics',
+                    ],
+                ],
+            ]);
     }
 
     public function toDatabase(object $notifiable): DatabaseMessage

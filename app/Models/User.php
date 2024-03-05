@@ -9,14 +9,16 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Notifications\Notification;
+use Laravel\Fortify\TwoFactorAuthenticatable;
 use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable implements MustVerifyEmail ,HasLocalePreference
 {
-    use HasApiTokens, HasFactory, Notifiable;
+    use HasApiTokens, HasFactory, Notifiable,TwoFactorAuthenticatable;
 
     /**
      * The attributes that are mass assignable.
@@ -81,6 +83,10 @@ class User extends Authenticatable implements MustVerifyEmail ,HasLocalePreferen
             ->using(ClassworkUser::class);
     }
 
+    public function devices() :MorphMany
+    {
+        return $this->morphMany(DeviceToken::class,'tokenable');
+    }
     public function comments() :HasMany
     {
         return $this->hasMany(Comment::class);
@@ -112,10 +118,15 @@ class User extends Authenticatable implements MustVerifyEmail ,HasLocalePreferen
 
         return '972569830744';
     }
+    public function routeNotificationForFcm(Notification $notification):string
+    {
+
+        return '972569830744';
+    }
     public function routeNotificationForHadara(Notification $notification):string
     {
 
-        return '972569522815';
+        return $this->devices()->pluck('token')->toArray();
     }
     public function preferredLocale()
     {
@@ -128,6 +139,12 @@ class User extends Authenticatable implements MustVerifyEmail ,HasLocalePreferen
         return 'Notifications.'.$this->id;
     }
 
-
-
+    public function receiveMessages() :MorphMany
+    {
+        return $this->morphMany(Message::class,'recipient');
+    }
+    public function sentMessages() :HasMany
+    {
+        return $this->hasMany(Message::class,'sender_id');
+    }
 }

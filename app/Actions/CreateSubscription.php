@@ -11,5 +11,7 @@ class CreateSubscription
     public function __invoke(array $data) :Subscription
     {
         return Subscription::create($data);
+
+
     }
 }
