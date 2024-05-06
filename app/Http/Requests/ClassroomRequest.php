@@ -36,10 +36,10 @@ class ClassroomRequest extends FormRequest
             'room'=>'nullable|string|max:255',
             'cover_image'=>[
                 'nullable',
-                File::image()
-                    ->max(12 * 1024)
+               /* File::image()
+                      ->max(12 * 1024)
                     ->dimensions(Rule::dimensions()->maxHeight(1000)->maxHeight(500))
-            ]
+         */   ]
         ];
     }
 

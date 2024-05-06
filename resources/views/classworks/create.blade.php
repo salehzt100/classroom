@@ -1,15 +1,119 @@
-<x-main-layout title="Classwork Create">
-    <div class="container">
-        <h1 class="mb-3"> {{$classroom->name}}</h1>
-        <h3 class="mb-4">Create Classwork</h3>
 
-        <form action="{{route('classrooms.classworks.store',[$classroom->id,'type'=>$type])}}" method="post"
-              enctype="multipart/form-data">
-            @csrf
-            @include('classworks._form')
+<x-basic-layout title="Classwork Create">
+    @push('styles')
 
-            <button type="submit" class="btn btn-primary">Create</button>
+        @vite(['resources/css/classroom-show.css'])
 
-        </form>
-    </div>
-</x-main-layout>
+        <style>
+            .create_classwork{
+                padding: 1rem;
+                background-color: #47b2e4;
+                border-radius: 40%;
+                box-shadow: 1px 1px #11101d;
+            }
+            .find_btn:hover{
+                background-color:#47b2e4 ;
+                color: #11101d;
+            }
+        </style>
+    @endpush
+
+    <x-slot name="nav_tabs" >
+
+        <li class="nav-item">
+            <a class="nav-link " aria-current="page" href="{{route('classrooms.show',$classroom->id)}}">Stream</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="{{route('classrooms.classworks.index',$classroom->id)}}">Classwork</a>
+
+        </li>
+        <li class="nav-item">
+            <a class="nav-link " aria-current="page" href="{{route('classrooms.people',$classroom->id)}}">People</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link " aria-current="page" href="#">Marks</a>
+        </li>
+    </x-slot>
+
+
+    <x-slot name="breadcrumb">
+        <li class="breadcrumb-item "><a href="{{route('classrooms.index')}}">Classroom</a></li>
+        <li class="breadcrumb-item  " aria-current="page"><a href="{{route('classrooms.show',$classroom->id)}}">{{$classroom->name}}</a></li>
+        <li class="breadcrumb-item  " aria-current="page"><a href="{{route('classrooms.classworks.index',$classroom->id)}}">Classwork</a></li>
+        <li class="breadcrumb-item  " aria-current="page">Create</li>
+    </x-slot>
+
+
+
+
+        <div class="container mt-4">
+            <h3 class="mb-5">Create Classwork</h3>
+
+            <form action="{{route('classrooms.classworks.store',[$classroom->id,'type'=>$type])}}" method="post"
+                  enctype="multipart/form-data">
+                @csrf
+                @include('classworks._form')
+
+                <button type="submit" class="btn main_btn">Create</button>
+
+            </form>
+
+            <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h1 class="modal-title fs-5" id="exampleModalLabel">Add Topic</h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+
+                        <form action="{{route('topics.store')}}" method="post">
+
+                        <div class="modal-body">
+                                @csrf
+                                <input type="hidden" name="classroom_id" value="{{$classroom->id}}">
+
+
+
+                            <x-form.floating-control name="name">
+                                <x-form.input name="name" value="" label="Topic Name" placeholder="Topic Name" id="topic_name" />
+                            </x-form.floating-control>
+
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary thr_bg_color">Add</button>
+                        </div>
+                        </form>
+
+                    </div>
+                </div>
+            </div>
+
+
+
+        </div>
+
+
+
+
+    @push('scripts')
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+                integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+                crossorigin="anonymous"></script>
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+        <!-- Place the following <script> and <textarea> tags your HTML's <body> -->
+
+        @vite(['resources/js/classroom-show.js'])
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+        <script>
+            const classroomId="{{$classroom->id}}";
+
+        </script>
+    @endpush
+
+
+</x-basic-layout>
+
+
+

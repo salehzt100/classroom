@@ -16,6 +16,8 @@
        name="{{$name}}"
        id="{{$id ?? $name}}"
        {{$attributes->merge(['type'=>'text'])
-        ->class(["form-control", "is-invalid"=>$errors->has($errorname ?? '') ])}}
+        ->class(["form-control   ms-1", "is-invalid"=>$errors->has($errorname ?? '') ])}}
 >
-<label for="{{$id??$name}}">{{ucwords($label??$name)}}</label>
+<label class=" ms-1" for="{{$id??$name}}">{{ucwords($label??$name)}}</label>
+
+

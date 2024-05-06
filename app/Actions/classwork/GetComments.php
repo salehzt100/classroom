@@ -11,7 +11,7 @@ class GetComments
     public function __invoke(Classwork $classwork):Collection
     {
         $comments = $classwork->comments()->get();
-        return $comments;
+        return $comments->reverse();
 
     }
 }

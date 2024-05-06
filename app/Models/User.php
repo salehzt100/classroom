@@ -101,7 +101,7 @@ class User extends Authenticatable implements MustVerifyEmail ,HasLocalePreferen
     public function getUserImageAttribute()
     {
         $name=explode(' ',$this->name);
-        return "https://ui-avatars.com/api/?name={$name[0]}}+{$name[1]}";
+        return "https://ui-avatars.com/api/?background=random&name={$name[0]}}+{$name[1]}";
     }
 
     public function submissions()

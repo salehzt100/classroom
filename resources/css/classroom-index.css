@@ -1,0 +1,140 @@
+
+
+/* Classroom Section Styles */
+.classroom #classroom-flters {
+    list-style: none;
+    margin-bottom: 20px;
+}
+
+.classroom #classroom-flters li {
+    cursor: pointer;
+    display: inline-block;
+    margin: 10px 5px;
+    font-size: 15px;
+    font-weight: 500;
+    line-height: 1;
+    color: #444444;
+    transition: all 0.3s;
+    padding: 8px 20px;
+    border-radius: 50px;
+    font-family: "Poppins", sans-serif;
+}
+
+.classroom #classroom-flters li:hover,
+.classroom #classroom-flters li.filter-active {
+    background: #47b2e4;
+    color: #fff;
+}
+
+.classroom .classroom-item {
+    margin-bottom: 4px;
+
+    position: relative;
+
+}
+
+.classroom .classroom-item .classroom-img {
+    overflow: hidden;
+}
+
+.classroom .classroom-item .classroom-img img {
+    transition: all 0.6s;
+}
+
+.classroom .classroom-item .classroom-info {
+    opacity: 1;
+    position: absolute;
+    left: 15px;
+    bottom: 0;
+    z-index: 3;
+    right: 15px;
+    transition: all 0.3s;
+    background: rgba(55, 81, 126, 0.8);
+    padding: 10px 15px;
+    height: 100px;
+}
+
+.classroom .classroom-item .classroom-info h4 {
+    font-size: 18px;
+    color: #fff;
+    font-weight: 600;
+    color: #fff;
+    margin-bottom: 0px;
+}
+
+.classroom .classroom-item .classroom-info p {
+    color: #f9fcfe;
+    font-size: 14px;
+    margin-bottom: 0;
+}
+
+.classroom .classroom-item .classroom-info .user_image,
+.classroom .classroom-item .classroom-info .details-link {
+    position: absolute;
+    right: 90px;
+    font-size: 24px;
+    top: calc(-40px);
+    color: #fff;
+    background-position: center;
+    transition: 0.3s;
+    border-radius: 50%;
+    width: 80px;
+    height: 80px;
+}
+
+.classroom .classroom-item .classroom-info .user_image:hover,
+.classroom .classroom-item .classroom-info .details-link:hover {
+    border: 4px solid #11101d;
+}
+
+.classroom .classroom-item .classroom-info .details-link {
+    right: 10px;
+}
+
+.classroom .classroom-item:hover .classroom-img img {
+    transform: scale(1.15);
+}
+
+.classroom .classroom-card:hover{
+    box-shadow: 4px 4px #47b2e4;
+}
+
+.classroom .classroom-item:hover .classroom-info {
+    opacity: 1;
+}
+
+
+
+.classroom .classroom-item .classroom-img  {
+    border-radius: 80px 15px 15px 15px;
+
+}
+.classroom .classroom-item{
+    border-radius: 80px 15px 15px 15px;
+
+}
+.classroom .classroom-item .classroom-info {
+    border-radius: 0 0 15px 15px;
+    margin-left: -3px;
+    margin-right: -3px;
+}
+.classroom-card{
+    text-decoration: none;
+
+}
+
+.classroom .classroom-item .classroom-info .user_name
+{
+    position: absolute;
+    right: 16px;
+    bottom: 11px;
+    font-size: 13px;
+    color: #47b2e4;
+    transition: 0.3s;
+}
+.classroom-item{
+    min-height: 14rem;
+    max-height: 14rem;
+
+    overflow: hidden;
+}

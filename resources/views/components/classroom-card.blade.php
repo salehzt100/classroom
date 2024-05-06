@@ -1,20 +1,22 @@
-<div class="col-md-3 mb-3">
 
-    <div class="card">
-            <img src="{{$classroom->cover_image_url}}" class="card-img-top" alt>
-        <div class="card-body">
-            <h5 class="card-title fs-2">{{$classroom->name}}</h5>
-            <p class="card-text">{{$classroom->section}}</p>
-            <div class="d-flex justify-content-between">
-                <a href="{{$classroom->url}}" class="btn btn-primary">{{__('View')}}</a>
-                <a href="{{route('classrooms.edit',$classroom->id)}}" class="btn btn-success">{{__('Edit')}}</a>
-                <form action="{{route('classrooms.destroy',$classroom->id)}}" method="post">
-                    @csrf
-                    @method('delete')
-                    <input type="submit" value="{{__('Delete')}}" class="btn btn-danger">
+<div class="col-lg-4 col-md-6 classroom-item filter-web mb-4">
+    <a href="{{$classroom->url}}" class="classroom-card">
 
-                </form>
-            </div>
+        <div class="classroom-img classroom-card">
+            <img src="{{$classroom->cover_image_url ?? asset('index_assets/img/project.jpg')}}"
+          class="img-fluid" alt=""></div>
+        <div class="classroom-info classroom-link">
+            <h4 class="mb-4 mt-2">{{$classroom->name}}</h4>
+            <p>{{$classroom->section}}
+            </p>
+
+            <a>
+                <img class="details-link" src="{{$classroom->user->user_image}}" alt="user img">
+            </a>
+
+
+            <h6 class="user_name">{{$classroom->user->name}} </h6>
         </div>
-    </div>
+    </a>
+
 </div>

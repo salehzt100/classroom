@@ -1,6 +1,5 @@
 import './bootstrap';
 
-
 (function ($) {
 
     let per_page = 30;
@@ -47,25 +46,44 @@ import './bootstrap';
 
 
     function addMessage(message, prepend) {
-        let receiverHtml = `<div class="chat-message-left pb-4 message">
+        let receiverHtml = `<div class="chat-message-left pb-4 message align-items-start">
                                         <div>
                                             <img src="${message.sender.user_image}" class="rounded-circle mr-1" alt="Sharon Lessman" width="40" height="40">
-                                            <div class="text-muted small text-nowrap mt-2">${message.sent_at}</div>
+                                            <div class="text-light-emphasis small text-nowrap mt-2">${message.sent_at}</div>
                                         </div>
-                                        <div class="flex-shrink-1 bg-light rounded py-2 px-3 ml-3 ">
-                                            <div class="font-weight-bold mb-1">${message.sender.name}</div>
+                                        <span>
+
+                            <div class="font-weight-bold thr_color mb-1">${message.sender.name}</div>
+
+                       <div class="flex-shrink-1 bg-dark-subtle rounded_message message_body p-2   ">
+
+
                                            ${message.body}
+
                                         </div>
+
+
                                     </div>`;
-        let senderHtml = `<div class="chat-message-right pb-4 message">
-                                        <div>
+        let senderHtml = `<div class="chat-message-right pb-2 message focus  align-items-start">
+                                         <div>
                                             <img src="${message.sender.user_image}"
                                                  class="rounded-circle mr-1" alt="Chris Wood" width="40" height="40">
-                                            <div class="text-muted small text-nowrap mt-2">${message.sent_at}</div>
+                                            <div class="text-light-emphasis small text-nowrap mt-2">${message.sent_at}</div>
+                                          </div>
+
+
+
+
+                                                                                <div class="flex-shrink-1 bg-primary rounded_message message_body p-2   ">
+
+                                                                                                                        ${message.body}
+
+
+
+
                                         </div>
-                                        <div class="flex-shrink-1 bg-primary  rounded py-3 px-3 mr-3 ">
-                                           ${message.body}
-                                        </div>
+
+
                                     </div>`;
 
         if (user.id == message.sender.id) {
@@ -116,7 +134,7 @@ import './bootstrap';
                 $('#online_users').append(
                     ` <div class="d-flex align-items-start m-4" id="user-${user.id}">
                                              <img src="${user.user_image}" class="rounded-circle mr-1" alt="Vanessa Tucker" width="40" height="40">
-                                             <div class="flex-grow-1 ms-4">
+                                             <div class="flex-grow-1 ms-4 thr_color">
                                                  ${user.name}
                                                  <div class="small"><span class="text-success " id="typing-${user.id}">Online</span></div>
                                              </div>
@@ -130,7 +148,7 @@ import './bootstrap';
             $('#online_users').append(
                 ` <div class="d-flex align-items-start m-4" id="user-${user.id}">
                                              <img src="${user.user_image}" class="rounded-circle mr-1" alt="Vanessa Tucker" width="40" height="40">
-                                             <div class="flex-grow-1 ms-4">
+                                             <div class="flex-grow-1 ms-4 thr_color">
                                                  ${user.name}
                                                  <div class="small"><span class="text-success " id="typing-${user.id}">Online</span></div>
                                              </div>

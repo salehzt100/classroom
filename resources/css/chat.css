@@ -1,0 +1,92 @@
+
+
+.chat-online {
+    color: #34ce57
+}
+
+.chat-offline {
+    color: #e4606d
+}
+
+
+.chat-messages {
+    display: flex;
+    flex-direction: column;
+    max-height: 800px;
+    overflow-y: scroll;
+}
+
+.chat-message-left,
+.chat-message-right {
+    display: flex;
+    flex-shrink: 0;
+    gap: 10px;
+
+}
+
+.chat-message-left {
+    margin-right: auto;
+
+}
+
+.chat-message-right {
+    flex-direction: row-reverse;
+    margin-left: auto;
+}
+.rounded_message{
+    border-radius: 16px;
+}
+.py-3 {
+    padding-top: 1rem !important;
+    padding-bottom: 1rem !important;
+}
+
+.px-4 {
+    padding-right: 1rem !important;
+    padding-left: 1rem !important;
+}
+
+.flex-grow-0 {
+    flex-grow: 0 !important;
+}
+.linear-bg-gradient
+{
+    background: linear-gradient(to bottom, #11101d,#1d1b31, #2e89b2 , #48a1bd);
+
+}
+
+
+.border-s-color{
+    border-color:#11101d ;
+}
+
+
+
+.border-top {
+    border-top: 1px solid #dee2e6 !important;
+}
+.no-rtl-ltr {
+    direction: ltr; /* or 'rtl' if you want to force left-to-right or right-to-left */
+}
+
+.chat_length{
+
+    height: 70vh;
+}
+.chat_body{
+    padding: 1.5rem 1.5rem 1.5rem 1.5rem;
+    height: calc(70vh - 6rem);
+    overflow-y: scroll;
+    scrollbar-width: none;
+}
+
+.chat_body::-webkit-scrollbar {
+    display: none;
+}
+.message_body{
+    max-width: 15rem;
+
+    overflow-wrap: break-word;
+}
+
+

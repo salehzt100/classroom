@@ -1,22 +1,41 @@
 
-<x-main-layout title="Trashed Classrooms">
+<x-basic-layout title="Trashed Classrooms">
 
-    <div class="container">
-        <h1 class="mb-5"> Classrooms</h1>
+
+    @push('styles')
+
+    @endpush
 
         <x-alert name="success" class="alert-success" />
 
         <x-alert name="error" class="alert-danger" />
+    <x-slot name="nav_tabs" >
+    </x-slot>
+    <x-slot name="breadcrumb" >
+        <li class="breadcrumb-item  " aria-current="page">Classroom</li>
+    </x-slot>
+    <!-- ======= classroom Section ======= -->
+    <section id="classroom" class="classroom mt-4">
+        <div class="container" data-aos="fade-up">
 
-        <div class="row">
-            @foreach($classrooms as $classroom)
-                <x-classroom-trashed-card :classroom="$classroom" />
-            @endforeach
+            <div class="section-title pe-3">
+                    <h2>Trashed Classrooms</h2>
+
+            </div>
+
+            <div class="row classroom-container p-3" data-aos="fade-up" data-aos-delay="200">
+
+                @foreach($classrooms as $classroom)
+
+                    <x-classroom-trashed-card :classroom="$classroom" />
+
+                @endforeach
+
+            </div>
+
+
+
         </div>
+    </section>
 
-
-    </div>
-    @push('scripts')
-        <script>console.log('@@stack')</script>
-    @endpush
-</x-main-layout>
+</x-basic-layout>

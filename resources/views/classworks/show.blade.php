@@ -1,117 +1,214 @@
-<x-main-layout title="Classwork Create">
-    <div class="container">
-        <h1 class="mb-3"> {{$classroom->name}}</h1>
-        <x-alert name="success" class="alert-success"/>
-        <x-alert name="error" class="alert-danger"/>
-        <h3 class="mb-4">{{$classwork->title}}</h3>
-        <hr>
-        <div class="row">
-            <div class="col-md-8">
-                <div class="ps-3">
-                    <p class=" bg-light rounded ">
-                        {!! $classwork->description !!}
-                    </p>
-                </div>
-                <h4>Comments</h4>
 
-                <form action="{{route('comments.store')}}"
-                      method="post"
-                      enctype="multipart/form-data">
-                    @csrf
-                    <div class="row ps-5 mt-3">
 
-                        <div class="col-md-10">
+
+
+
+
+<x-basic-layout title="Classwork Create">
+    @push('styles')
+
+        @vite(['resources/css/classroom-show.css'])
+
+        <style>
+            .create_classwork{
+                padding: 1rem;
+                background-color: #47b2e4;
+                border-radius: 40%;
+                box-shadow: 1px 1px #11101d;
+            }
+            .find_btn:hover{
+                background-color:#47b2e4 ;
+                color: #11101d;
+            }
+            .submission_file a{
+                padding: 1rem;
+                text-decoration: none;
+                color:#47b2e4 ;
+                margin-left: 1rem;
+                font-size: 1.2rem;
+            }
+            .submission_file{
+                padding: 1rem;
+                background-color: #11101d;
+                margin: 1rem 1rem 1rem 0;
+                border-radius: 15px;
+
+            }
+        </style>
+    @endpush
+
+    <x-slot name="nav_tabs" >
+
+        <li class="nav-item">
+            <a class="nav-link " aria-current="page" href="{{route('classrooms.show',$classroom->id)}}">Stream</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="{{route('classrooms.classworks.index',$classroom->id)}}">Classwork</a>
+
+        </li>
+        <li class="nav-item">
+            <a class="nav-link " aria-current="page" href="{{route('classrooms.people',$classroom->id)}}">People</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link " aria-current="page" href="#">Marks</a>
+        </li>
+    </x-slot>
+
+
+    <x-slot name="breadcrumb">
+        <li class="breadcrumb-item "><a href="{{route('classrooms.index')}}">Classroom</a></li>
+        <li class="breadcrumb-item  " aria-current="page"><a href="{{route('classrooms.show',$classroom->id)}}">{{$classroom->name}}</a></li>
+        <li class="breadcrumb-item  " aria-current="page"><a href="{{route('classrooms.classworks.index',$classroom->id)}}">Classwork</a></li>
+        <li class="breadcrumb-item  " aria-current="page">{{$classwork->title}}</li>
+    </x-slot>
+
+
+
+
+    <div class="container mt-5 mb-5">
+        <div class="row " >
+            <div class="col-md-8 border p-3 rounded ">
+                <div class="card-body ">
+                    <div class="d-flex justify-content-between">
+                        <div class="d-flex flex-row align-items-center">
+                            <img src="{{$classwork->user->user_image}}" alt="avatar" width="25"
+                                 height="25" class="rounded"/>
+                            <p class="small mb-0 ms-2">{{$classwork->user->name}}</p>
+                        </div>
+                        <small class="secondary-color">{{$classwork->created_at->diffForHumans()}}</small>
+                    </div>
+
+                    <p class="mb-5 mt-4 ms-5  ">{!! $classwork->description !!}</p>
+
+
+
+                    <div class="border-top">
+
+                        <div class="comments pt-3" id="comments">
+
+
+                            @foreach($comments as $comment)
+                                <div class="row pt-3">
+                                    <div class="col-md-1 class_img">
+                                        <img src="{{$comment->user->user_image}}" alt="avatar" width="25"
+                                             height="25" class="rounded"/>
+                                    </div>
+
+                                    <div class="col-md-10 border p-2 rounded">
+                                        <div class="d-flex bor">
+                                            <h6 class="secondary-color">{{$comment->user->name}} </h6>
+                                            <small
+                                                class="text-muted ms-3">{{$comment->created_at?->format('H:i')}}</small>
+                                        </div>
+
+
+                                        <p class="mb-0">{!! $comment->content !!}</p>
+                                    </div>
+
+
+                                </div>
+                            @endforeach
+
+                        </div>
+
+                        <form action="{{route('comments.store')}}"
+                              method="post"
+                              enctype="multipart/form-data"
+                        >
+                            @csrf
                             <input type="hidden" name="id" value="{{$classwork->id}}">
                             <input type="hidden" name="type" value="classwork">
 
-                            <div class="form-outline mb-2 ">
-                                <input type="text" id="addANote" name="content" class="form-control"
-                                       placeholder="Type comment..."/>
+
+                            <div class="row mt-4 align-items-center">
+
+                                <div class="col-md-1">
+                                    <img src="{{Auth::user()->user_image}}" alt="avatar" width="25" height="25"
+                                         class="rounded"/>
+                                </div>
+                                <div class="col-md-10">
+                                    <input type="text"  name="content" class="form-control"
+                                           placeholder="Add comment..."/>
+
+                                </div>
+                                <button type="submit" class="col-md-1 border-0 bg-white pb-2 ">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="#47b2e4" class="bi bi-send" viewBox="0 0 16 16">
+                                        <path
+                                            d="M15.854.146a.5.5 0 0 1 .11.54l-5.819 14.547a.75.75 0 0 1-1.329.124l-3.178-4.995L.643 7.184a.75.75 0 0 1 .124-1.33L15.314.037a.5.5 0 0 1 .54.11ZM6.636 10.07l2.761 4.338L14.13 2.576zm6.787-8.201L1.591 6.602l4.339 2.76z"/>
+                                    </svg>                                        </button>
                             </div>
-
-
-                        </div>
-                        <div class="col-md-2 ">
-                            <button type="submit" class="btn btn-primary ms-2">
-                                Add
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                                     class="bi bi-send-plus-fill" viewBox="0 0 16 16">
-                                    <path
-                                        d="M15.964.686a.5.5 0 0 0-.65-.65L.767 5.855H.766l-.452.18a.5.5 0 0 0-.082.887l.41.26.001.002 4.995 3.178 1.59 2.498C8 14 8 13 8 12.5a4.5 4.5 0 0 1 5.026-4.47zm-1.833 1.89L6.637 10.07l-.215-.338a.5.5 0 0 0-.154-.154l-.338-.215 7.494-7.494 1.178-.471z"/>
-                                    <path
-                                        d="M16 12.5a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0m-3.5-2a.5.5 0 0 0-.5.5v1h-1a.5.5 0 0 0 0 1h1v1a.5.5 0 0 0 1 0v-1h1a.5.5 0 0 0 0-1h-1v-1a.5.5 0 0 0-.5-.5"/>
-                                </svg>
-                            </button>
-
-
-                        </div>
-
-
+                        </form>
                     </div>
 
-                </form>
-                <hr>
-                <div class="comments ps-5 pe-5 pb-4">
-                    @foreach($comments as $comment)
-                        <div class="card mb-4">
-                            <div class="card-body">
-                                <p>{{$comment->content}}</p>
 
-                                <div class="d-flex justify-content-between">
-                                    <div class="d-flex flex-row align-items-center">
-                                        <img src="{{$comment->user->user_image}}" alt="avatar" width="25"
-                                             height="25" class="rounded"/>
-                                        <p class="small mb-0 ms-2">{{$comment->user->name}}</p>
-                                    </div>
-                                    <div class="d-flex flex-row align-items-center">
-                                        <p class="small text-muted mb-0">{{$comment->created_at->diffForHumans()}}</p>
-                                        <i class="far fa-thumbs-up mx-2 fa-xs text-black"
-                                           style="margin-top: -0.16rem;"></i>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    @endforeach
                 </div>
 
             </div>
             <div class="col-md-4">
+
+
+
                 @can('submission.create',[$classwork])
 
-                <div class="bordered rounded p-3 bg-light ">
-                    <h4> Submissions </h4>
-                    @if($submissions->count())
+                    <div class="bordered rounded p-3 bg-light ">
+                        <h4 class="mb-5 "> Submissions </h4>
+                        @if($submissions->count())
 
-                        <div class="files ">
+                            <div class="files ">
 
-                            <ul>
-                                @foreach($submissions as $submission)
-                                    <li>
-                                        <a href="{{route('submissions.file',$submission->id)}}" class="row p-1" target="_blank"> File #{{$loop->iteration}}</a>
-                                    </li>
-                                @endforeach
-                            </ul>
+                                <ul>
+                                    @foreach($submissions as $submission)
+                                        <li class="submission_file">
+                                            <a href="{{route('submissions.file',$submission->id)}}" class="row p-1 " target="_blank"> File  {{$loop->iteration}}</a>
+                                        </li>
+                                    @endforeach
+                                </ul>
 
 
-                        </div>
-                 @else
-                        <form action="{{ route('submissions.store', $classwork->id) }}" method="post"
-                              class="d-flex flex-column align-items-start mt-3" enctype="multipart/form-data">
-                            @csrf
+                            </div>
+                        @else
+                            <form action="{{ route('submissions.store', $classwork->id) }}" method="post"
+                                  class="d-flex flex-column align-items-start mt-3" enctype="multipart/form-data">
+                                @csrf
 
-                            <x-form.floating-control name="files.0">
-                                <x-form.input type="file" name="files[]" errorname="files.0" label="Uploads Files"
-                                              placeholder="Uploads Files" multiple/>
-                            </x-form.floating-control>
-                            <button type="submit" class="btn btn-primary mt-3">Submit</button>
-                        </form>
+                                <x-form.floating-control name="files.0">
+                                    <x-form.input type="file" name="files[]" errorname="files.0" label="Uploads Files"
+                                                  placeholder="Uploads Files" multiple/>
+                                </x-form.floating-control>
+                                <button type="submit" class="btn btn-primary mt-3">Submit</button>
+                            </form>
 
-                    @endif
-                </div>
+                        @endif
+                    </div>
                 @endcan
             </div>
         </div>
 
     </div>
-</x-main-layout>
+
+
+
+
+    @push('scripts')
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+                integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+                crossorigin="anonymous"></script>
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+        <!-- Place the following <script> and <textarea> tags your HTML's <body> -->
+
+        @vite(['resources/js/classroom-show.js'])
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+        <script>
+            const classroomId="{{$classroom->id}}";
+
+        </script>
+    @endpush
+
+
+</x-basic-layout>
+
+
+
+
 

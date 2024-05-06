@@ -153,7 +153,10 @@ class Classroom extends Model
 
     public function getNameAttribute($value)
     {
-        return ucwords($value);
+        if ($value){
+            return ucwords($value);
+
+        }
     }
     protected $appends =[
         'cover_image_url'
@@ -166,9 +169,12 @@ class Classroom extends Model
     public function getCoverImageUrlAttribute()
     {
         if ($this->cover_image_path) {
-            return  Storage::disk(static::$disk)->url($this->cover_image_path);
+            return Storage::disk(static::$disk)->url($this->cover_image_path);
+
         }
-        return 'https://placehold.co/600x165/033E3E/@2x.png?text=' . $this->name;
+            return null;
+
+/*        return 'https://placehold.co/600x200/033E3E/@2x.png?text=' . $this->name;*/
 
     }
     public function scopeFilter(Builder $builder, $filters)
@@ -212,13 +218,13 @@ class Classroom extends Model
        }*/
 
 //  make set (mutator) and get(accessor) in the same function
-    public function section(): Attribute
+  /*  public function section(): Attribute
     {
         return Attribute::make(
             get: fn(?string $value) => ucwords($value),
             set: fn(?string $value) => strtolower($value)
         );
-    }
+    }*/
 
 
 

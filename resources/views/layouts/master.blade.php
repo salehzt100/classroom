@@ -1,6 +1,7 @@
 <!doctype html>
 <html lang="en" dir="{{App::currentLocale() =='ar' ? 'rtl' : 'ltr'}}">
 <head>
+
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>@yield('title',config('app.name'))</title>
@@ -18,7 +19,6 @@
               integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
 
     @endif
-    <script src="https://cdn.tiny.cloud/1/au6pwp9jpn18hk2yix49fmqwm0s89fklxsdlguy29ypniqoh/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
 
 
     @stack('styles')
@@ -58,8 +58,10 @@
                             <li><a class="dropdown-item" href="#">Something else here</a></li>
                         </ul>
                     </li>
-                    <x-user-notifications-menu />
+                    @auth
+                        <x-user-notifications-menu/>
 
+                    @endauth
                 </ul>
                 <div class="text text-success m-2">
                     {{Auth::user()?->name}}
@@ -92,12 +94,79 @@
         integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
         crossorigin="anonymous"></script>
 
-@stack('scripts')
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 
-<script>
-    const userId = {{Auth::id()}};
+<script type="module">
+    // Import the functions you need from the SDKs you need
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+    import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-analytics.js";
+    import { getMessaging,getToken ,onMessage} from "https://www.gstatic.com/firebasejs/10.8.1/firebase-messaging.js";
+
+    // TODO: Add SDKs for Firebase products that you want to use
+    // https://firebase.google.com/docs/web/setup#available-libraries
+
+    // Your web app's Firebase configuration
+    // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+    const firebaseConfig = {
+        apiKey: "AIzaSyBIGBr6TN6IDCYUrmiQNiI19uIFpiLbxaE",
+        authDomain: "classroom-1dbcc.firebaseapp.com",
+        projectId: "classroom-1dbcc",
+        storageBucket: "classroom-1dbcc.appspot.com",
+        messagingSenderId: "768181467336",
+        appId: "1:768181467336:web:ba73e0707fff80cdc20dfd",
+        measurementId: "G-4PYCJJ8F6S"
+    };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const analytics = getAnalytics(app);
+    const messaging = getMessaging(app);
+
+    getToken(messaging, {
+            vapidKey: "BNJFks7ZRcPItpYDiy7c80dN2pGxsVf3ceiVsuTgTm4Gl_PoWblEDqVi7zJ4fS7BbCSQBTwknqXrypl7xjz1owQ"
+        }
+    ).then((currentToken) => {
+        if (currentToken) {
+            console.log(currentToken)
+            $.ajax({
+                method: 'post',
+                url: '/api/v1/devices',
+                headers: {
+                    'x-api-key': 'base64:9Vc1bTsIjCszuRxH324Xlo/RXABWJL/uRRZ1gPFfYLg=',
+                },
+                data: {
+                    token: currentToken,
+                    _token:"{{csrf_token()}}"
+                },
+                success: () => {
+                },
+                error: (xhr, status, error) => {
+                    console.error("AJAX request failed:", status, error);
+                }
+            });
+        } else {
+            // Show permission request UI
+            console.log('No registration token available. Request permission to generate one.');
+            // ...
+        }
+    }).catch((err) => {
+        console.log('An error occurred while retrieving token. ', err);
+        // ...
+    });
+    onMessage(messaging, (payload) => {
+        console.log('Message received. ', payload);
+        // ...
+    });
 </script>
+<script>
+    const userId = "{{\Illuminate\Support\Facades\Auth::id()}}";
+/*    const store_fcmDevice_url="{{route('devices.store')}}";
+    const csrf_token="{{csrf_token()}}";
+    console.log(userId)*/
+</script>
+
 @vite(['resources/js/app.js'])
+@stack('scripts')
 
 </body>
 </html>

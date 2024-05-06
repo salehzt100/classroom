@@ -120,7 +120,7 @@ class ClassworkController extends Controller
     {
         $this->authorize('delete', $classwork);
 
-        $classwork->destroy();
+        $classwork->delete();
 
         return Redirect::route('classrooms.classworks.index', $classroom->id)
             ->with('success', 'Classwork Deleted!');

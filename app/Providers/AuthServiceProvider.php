@@ -106,6 +106,55 @@ class AuthServiceProvider extends ServiceProvider
                 ->wherePivot('classwork_id','=',$classwork->id)
                 ->exists();
         });
+        Gate::define('teacher',function (User $user,Classroom $classroom){
+
+            $isTeacher=
+                $user
+                    ->classrooms()
+                    ->wherePivot('classroom_id','=',$classroom->id)
+                    ->wherePivot('role','=','teacher')
+                    ->exists();
+
+
+
+            if ($isTeacher )
+            {
+                return true;
+            }
+
+            return false;
+
+        });
+
+
+        Gate::define('deletePeople',function (User $user,Classroom $classroom,User $people){
+
+            $isTeacher=
+                $user
+                    ->classrooms()
+                    ->wherePivot('classroom_id','=',$classroom->id)
+                    ->wherePivot('role','=','teacher')
+                    ->exists();
+
+            $peopleIsStudent=
+                $people
+                    ->classrooms()
+                    ->wherePivot('classroom_id','=',$classroom->id)
+                    ->wherePivot('role','=','student')
+                    ->exists();
+
+            $userIsOwner= $user->id == $classroom->user_id;
+            $peopleIsOwner= $people->id == $classroom->user_id;
+
+
+            if (($isTeacher && $peopleIsStudent) || ($userIsOwner && !$peopleIsOwner) )
+            {
+                return true;
+            }
+
+            return false;
+
+        });
 
     }
 }

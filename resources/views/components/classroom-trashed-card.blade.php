@@ -1,25 +1,40 @@
-<div class="col-md-3">
 
-    <div class="card">
-            <img src="{{$classroom->cover_image_url}}" class="card-img-top" alt>
 
-        <div class="card-body">
-            <h5 class="card-title fs-2">{{$classroom->name}}</h5>
-            <p class="card-text">{{$classroom->section}}</p>
-            <div class="d-flex justify-content-between">
-                <form action="{{route('classrooms.restore',$classroom->id)}}" method="post">
-                    @csrf
-                    @method('put')
-                    <input type="submit" value="restore" class="btn btn-success"></input>
 
-                </form>
-                <form action="{{route('classrooms.forceDelete',$classroom->id)}}" method="post">
-                    @csrf
-                    @method('delete')
-                    <input type="submit" value="Delete Forever" class="btn btn-danger"></input>
+<div class="col-lg-4 col-md-6 classroom-item filter-web">
+    <a href="#" class="classroom-card">
 
-                </form>
+        <div class="classroom-img classroom-card">
+            <img src="{{asset('index_assets/img/project.jpg')}}"
+
+          class="img-fluid" alt=""></div>
+        <div class="classroom-info classroom-link">
+
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h4 class="mb-4 mt-2">{{$classroom->name}}</h4>
+                    <p>{{$classroom->section}}
+                    </p>
+                </div>
+                <div class="flex-column justify-content-center align-items-center">
+                    <form   action="{{route('classrooms.restore',$classroom->id)}}" method="post">
+                        @csrf
+                        @method('put')
+                        <input type="submit" value="restore" class="btn btn-success w-100 mb-2"></input>
+
+                    </form>
+                    <form  action="{{route('classrooms.forceDelete',$classroom->id)}}" method="post">
+                        @csrf
+                        @method('delete')
+                        <input type="submit" value="Delete Forever" class="btn btn-danger w-100"></input>
+
+                    </form>
+                </div>
+
             </div>
+
         </div>
-    </div>
+    </a>
+
 </div>
+

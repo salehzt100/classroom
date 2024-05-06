@@ -23,6 +23,7 @@ class SubmissionController extends Controller
 
         Gate::authorize('submission.create', [$classwork]);
 
+
         if (!$assigned) {
             abort(403);
         }

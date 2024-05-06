@@ -18,7 +18,7 @@
         </x-form.floating-control>
 
         <x-form.floating-control name="description">
-            <x-form.input-text name="description" label="Description (Option)" :value="$classwork->description"
+            <x-form.input-text name="description" id="editor1" label="Description (Option)" :value="$classwork->description"
                                placeholder="Classwork Description"/>
         </x-form.floating-control>
 
@@ -29,7 +29,7 @@
                           placeholder="Publish Date" type="date"/>
         </x-form.floating-control>
 
-        <button class="btn btn-primary mb-3" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">Select Students ...</button>
+        <button class="btn main_btn mb-3" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">Select Students ...</button>
 
         <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
             <div class="offcanvas-header">
@@ -80,6 +80,7 @@
                 </div>
 
             </div>
+        <button type="button" id="addTopic" class="btn main_btn" data-bs-toggle="modal" data-bs-target="#addTopic" >Add Topic</button>
 
 
 
@@ -90,18 +91,32 @@
 
     <!-- Place the following <script> and <textarea> tags your HTML's <body> -->
     <script>
-        tinymce.init({
-            selector: '#description',
-            plugins: 'ai tinycomments mentions anchor autolink charmap codesample emoticons image link lists media searchreplace table visualblocks wordcount checklist mediaembed casechange export formatpainter pageembed permanentpen footnotes advtemplate advtable advcode editimage tableofcontents mergetags powerpaste tinymcespellchecker autocorrect a11ychecker typography inlinecss',
-            toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table mergetags | align lineheight | tinycomments | checklist numlist bullist indent outdent | emoticons charmap | removeformat',
-            tinycomments_mode: 'embedded',
-            tinycomments_author: 'Author name',
-            mergetags_list: [
-                { value: 'First.Name', title: 'First Name' },
-                { value: 'Email', title: 'Email' },
-            ],
-            ai_request: (request, respondWith) => respondWith.string(() => Promise.reject("See docs to implement AI Assistant")),
-        });
+        const exampleModal = document.getElementById('exampleModal')
+        if (exampleModal) {
+            exampleModal.addEventListener('show.bs.modal', event => {
+                // Button that triggered the modal
+                const button = event.relatedTarget
+                // Extract info from data-bs-* attributes
+                const recipient = button.getAttribute('data-bs-whatever')
+                // If necessary, you could initiate an Ajax request here
+                // and then do the updating in a callback.
+
+                // Update the modal's content.
+                const modalTitle = exampleModal.querySelector('.modal-title')
+                const modalBodyInput = exampleModal.querySelector('.modal-body input')
+
+                modalTitle.textContent = `New message to ${recipient}`
+                modalBodyInput.value = recipient
+            })
+        }
+
+        $(document).ready(function() {
+            $('#addTopic').click(function () {
+                $('.modal').modal('show');
+                $('.modal-backdrop').remove();
+
+            });
+        })
     </script>
 
 

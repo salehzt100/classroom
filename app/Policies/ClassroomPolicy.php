@@ -13,6 +13,7 @@ class ClassroomPolicy
      */
     public function viewAny(User $user): bool
     {
+
         return true;
     }
 
@@ -22,7 +23,11 @@ class ClassroomPolicy
 
     public function view(User $user,Classroom $classroom): bool
     {
+
+
         return true;
+
+
 
     }
     public function test(User $user,$id): bool
@@ -42,36 +47,53 @@ class ClassroomPolicy
     /**
      * Determine whether the user can update the model.
      */
-    public function update(User $user, Classroom $classroom): bool
+    public function update(User $user, Classroom $classroom): response
     {
-        return true;
+        $result = $classroom->user_id == $user->id;
 
+        return $result
+            ? Response::allow()
+            : Response::deny("You are not the owner of this class");
     }
 
     /**
      * Determine whether the user can delete the model.
      */
-    public function delete(User $user, Classroom $classroom): bool
+    public function delete(User $user, Classroom $classroom): Response
     {
-        return true;
+
+        $result = $classroom->user_id == $user->id;
+
+        return $result
+            ? Response::allow()
+            : Response::deny("You are not the owner of this class");
+
 
     }
 
     /**
      * Determine whether the user can restore the model.
      */
-    public function restore(User $user, Classroom $classroom): bool
+    public function restore(User $user, Classroom $classroom): response
     {
-        return true;
+        $result = $classroom->user_id == $user->id;
+
+        return $result
+            ? Response::allow()
+            : Response::deny("You are not the owner of this class");
 
     }
 
     /**
      * Determine whether the user can permanently delete the model.
      */
-    public function forceDelete(User $user, Classroom $classroom): bool
+    public function forceDelete(User $user, Classroom $classroom): response
     {
-        return true;
+        $result = $classroom->user_id == $user->id;
+
+        return $result
+            ? Response::allow()
+            : Response::deny("You are not the owner of this class");
 
     }
 }

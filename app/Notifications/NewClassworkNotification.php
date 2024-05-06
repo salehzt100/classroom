@@ -39,10 +39,10 @@ class NewClassworkNotification extends Notification
         $via = [
             'database',
             'mail',
-            FcmChannel::class,
-//            'broadcast',
-//            'vonage',
-//            HadaraSmsChannel::class
+/*            FcmChannel::class,
+            'broadcast',
+           'vonage',*/
+/*           HadaraSmsChannel::class*/
         ];
 
 //        if ($notifiable->receive_mail_notifications) {
@@ -93,7 +93,6 @@ class NewClassworkNotification extends Notification
         return (new FcmMessage(notification: new FcmNotification(
             title: 'New Classwork',
             body: $content,
-/*            image: 'http://example.com/url-to-image-here.png'*/
         )))
             ->data(['classwork_id' => "{$classwork->id}", 'user_id' => "{$classwork->user_id}"])
             ->custom([

@@ -18,11 +18,10 @@ class UserNotificationsMenu extends Component
     {
 
          $user=Auth::user();
-
-        $this->notifications=$user->notifications()
-            ->take($count)
-            ->get();
         $this->unreadCount=$user->unreadNotifications()->count();
+
+        $this->notifications=$user->unreadNotifications()
+            ->simplePaginate($this->unreadCount);
     }
 
     /**

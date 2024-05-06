@@ -15,14 +15,18 @@ class DevicesController extends Controller
             'token'=>['required','string'],
         ]);
         $user=$request->user();
-        $exists=$user->devices()->where('token','=',$request->post('token'))->first();
-        if (!$exists){
-            $token=$user->devices()->create([
-                'token'=>$request->post('token'),
-            ]);
-            return $token;
 
-        }
+        $exists=$user->devices()->where('token','=',$request->post('token'))->first();
+           if (!$exists){
+               $token=$user->devices()->create([
+                   'token'=>$request->post('token'),
+               ]);
+               return $token;
+
+           }
+
+
+
 
 
     }

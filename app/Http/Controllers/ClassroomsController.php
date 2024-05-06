@@ -4,10 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\ClassroomRequest;
 use App\Models\Classroom;
+use App\Policies\ClassroomPolicy;
 use App\Services\ClassroomServices;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Session;
 use Illuminate\View\View as BaseView;
@@ -93,6 +95,13 @@ class ClassroomsController extends Controller
     public function restore(string $id, ClassroomServices $classroom_handlers) :RedirectResponse
     {
 
+
+        $deleted_classroom=  Classroom::onlyTrashed()->findOrFail($id);
+
+
+        Gate::authorize('restore',$deleted_classroom);
+
+
         $classroom = $classroom_handlers->restore($id);
 
         return Redirect::route('classrooms.index')->with('success', "Classroom ({$classroom->name}) Restored");
@@ -102,6 +111,7 @@ class ClassroomsController extends Controller
     {
 
         $classroom = $classroom_handlers->forceDelete($id);
+        Gate::authorize('forceDelete',$classroom);
 
         return Redirect::route('classrooms.trashed')
             ->with('success', "Classroom ({$classroom->name}) deleted forever!");

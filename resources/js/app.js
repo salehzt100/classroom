@@ -6,7 +6,6 @@ import './bootstrap';
 //
 // Alpine.start();
 
-
 let classroomId = parent.classroomId;
 
 if (classroomId === null) {

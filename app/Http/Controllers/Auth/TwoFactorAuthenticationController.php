@@ -9,7 +9,7 @@ class TwoFactorAuthenticationController extends Controller
 {
     public function create()
     {
-        return view()->make('auth.2fa',[
+        return view()->make('profile',[
             'user'=>Auth::user(),
         ]);
     }

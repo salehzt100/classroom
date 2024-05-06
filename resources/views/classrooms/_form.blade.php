@@ -19,5 +19,5 @@
     <x-form.input type="file" name="cover_image" value="{{$classroom->cover_image}}" label="cover image" placeholder="Cover Image" />
 </x-form.floating-control>
 
-<button type="submit" class="btn btn-primary">{{$button_label}}</button>
+<button type="submit" class="btn main_btn">{{$button_label}}</button>
 

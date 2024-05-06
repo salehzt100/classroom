@@ -1,0 +1,83 @@
+
+.main-border-color {
+    border-color: rgb(182, 160, 146);
+}
+
+.main-shadow {
+    text-shadow: 2px 2px rgb(182, 160, 146, 30%);
+}
+
+.secondary-color {
+
+    color: #1d1b31;
+}
+.secondary-bg-color {
+
+    background-color: #11101d;
+}
+
+.secondary-shadow {
+    text-shadow: 2px 2px rgb(209, 231, 221, 40%);
+
+}
+.logo{
+    padding: 0;
+    margin: 0;
+}
+
+
+.thr_color{
+    color: #47b2e4;
+
+}
+
+.thr_bg_color{
+    background-color: #47b2e4;
+
+}
+ .breadcrumb li  {
+    color: #47b2e4;
+}
+.breadcrumb li a  {
+text-decoration: none;
+}
+
+.breadcrumb{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.breadcrumb-item + .breadcrumb-item::before {
+    content: " > ";
+    color: #47b2e4; /* Your desired slash color */
+}
+
+
+.breadcrumb-item + .breadcrumb-item:nth-child(2)::before {
+    content: " >";
+    display: none;
+}
+.nav-tabs li a
+{
+    color: #47b2e4; /* Your desired slash color */
+
+}
+
+.main_btn {
+
+    color: #47b2e4;
+    background-color: #11101d;
+}
+.main_btn:hover {
+
+    color: #11101d;
+    background-color: #47b2e4;
+}
+.linear-bg-gradient
+{
+    background: linear-gradient(to right, #11101d,#1d1b31, #2e89b2);
+
+}
+
+

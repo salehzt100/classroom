@@ -28,10 +28,6 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
-
 Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
@@ -52,18 +48,27 @@ Route::middleware('auth')->group(function () {
 //Route::get('/classrooms/{classroom}', [ClassroomsController::class, 'show'])->name('classrooms.show');
 //Route::delete('/classrooms/{classroom}', [ClassroomsController::class, 'destroy'])->name('classrooms.destroy');*/
 
+Route::view('/profile', 'profile')->name('profile');
 
-Route::view('/', 'welcome')->name('home');
+Route::view('/', 'home')->name('home');
 
-Route::middleware(['auth'])->group(function () {
+Route::view('features', 'features')->name('features');
+Route::get('pricing',[PlanController::class,'index'])->name('pricing');
+Route::view('about-as', 'aboutAs')->name('aboutAs');
+Route::view('contact', 'contact')->name('contact');
+
+
+Route::middleware(['auth','verified'])->group(function () {
 
     Route::prefix('classrooms/trashed')
         ->as('classrooms.')->controller(ClassroomsController::class)
         ->group(function () {
 
             Route::get('/', 'trashed')->name('trashed');
-            Route::put('/{classroom}', 'restore')->name('restore');
-            Route::delete('/{classroom}', 'forceDelete')->name('forceDelete');
+            Route::put('/{classroom}', 'restore')->name('restore')->middleware('password.confirm');
+
+            Route::delete('/{classroom}', 'forceDelete')->name('forceDelete')->middleware('password.confirm');
+
 
         });
 
@@ -74,11 +79,13 @@ Route::middleware(['auth'])->group(function () {
 
 
     //// route model binding
-    Route::resources([
-        'classrooms' => ClassroomsController::class,
-        'topics' => TopicsController::class,
-        'classrooms.classworks' => ClassworkController::class
-    ]);
+    Route::resource('classrooms', ClassroomsController::class)->except(['destroy']);
+    Route::delete('classrooms/{classroom}', [ClassroomsController::class, 'destroy'])
+        ->name('classrooms.destroy')
+        ->middleware('password.confirm');
+
+    Route::resource('topics', TopicsController::class);
+    Route::resource('classrooms.classworks', ClassworkController::class);
 
 //    Route::resource('classrooms.classworks',ClassworkController::class)
 //        ->shallow();
@@ -111,7 +118,6 @@ Route::middleware(['auth'])->group(function () {
         ->name('payments.success');
     Route::get('payments/{subscription}/cancel',[PaymentsController::class,'cancel'])
         ->name('payments.cancel');
-    Route::get('plans',[PlanController::class,'index'])->name('plans');
 
     Route::get('subscriptions/{subscription}/pay',[PaymentsController::class,'create'])
         ->name('checkout');
@@ -128,5 +134,8 @@ Route::middleware(['auth'])->group(function () {
 Route::post('language/change',LanguageSelectorsController::class)->name('locale');
 
 Route::post('/payments/stripe/webhook',StripeController::class);
+
+
+/*Route::get('/dashboard',[ClassroomsController::class,'index'])->middleware(['verified']);*/
 
 
