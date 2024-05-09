@@ -70,10 +70,3 @@ To run this project locally, ensure you have the following installed:
 
 This project was built as a part of learning Laravel. Contributions, issues, and feature requests are welcome. Feel free to check the issues page if you want to contribute.
 
-## License
-
-This project is available under the MIT License. See the [LICENSE.md](LICENSE.md) file for more details.
-
----
-
-This version emphasizes that the project is part of a learning process with Laravel, which might encourage other learners to contribute or use it as a reference.
